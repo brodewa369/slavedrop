@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>L2 · Liquid Glass Light</title>
+<style>
+  :root {
+    --accent: #0f9b6e; --ease: cubic-bezier(.16,1,.3,1);
+    --font: -apple-system, system-ui, 'Geist', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font); font-size: 13px; color: #1b1f24;
+    min-height: 100vh; padding: 24px; overflow-x: hidden;
+    background:
+      radial-gradient(55vw 40vw at -5% -10%, #d1fae5 0%, transparent 60%),
+      radial-gradient(48vw 36vw at 108% 0%, #dbeafe 0%, transparent 60%),
+      radial-gradient(52vw 42vw at 60% 125%, #ede9fe 0%, transparent 60%),
+      #f4f5f7;
+  }
+  .glass {
+    background: rgba(255,255,255,.55);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255,255,255,.75);
+    border-radius: 22px;
+    box-shadow:
+      inset 0 1.5px 0 rgba(255,255,255,.95),
+      inset 0 -1px 0 rgba(255,255,255,.35),
+      0 18px 42px -16px rgba(30,35,45,.28);
+  }
+  .head { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+  .head h1 { font-size: 17px; font-weight: 650; letter-spacing: -0.015em; }
+  .head .sub { color: #6b7280; font-size: 11.5px; }
+  .head .sp { flex: 1; }
+  .btn {
+    height: 32px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 12.5px; cursor: pointer;
+    background: rgba(255,255,255,.6); color: #4b5563; border: 1px solid rgba(255,255,255,.8);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    display: inline-flex; align-items: center; gap: 7px; transition: all .16s var(--ease);
+  }
+  .btn:hover { color: #111827; background: rgba(255,255,255,.85); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: transparent; font-weight: 600; }
+  .btn.primary:hover { filter: brightness(1.06); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 18px; }
+  .card { padding: 18px; display: flex; flex-direction: column; gap: 14px; transition: transform .2s var(--ease); }
+  .card:hover { transform: translateY(-3px); }
+  .row { display: flex; align-items: center; gap: 10px; }
+  .dot { width: 8px; height: 8px; border-radius: 99px; background: #c7cdd4; flex: 0 0 8px; }
+  .dot.on { background: var(--accent); box-shadow: 0 0 0 3px rgba(15,155,110,.18); }
+  .card h2 { font-size: 14px; font-weight: 620; letter-spacing: -0.01em; }
+  .card .meta { font-size: 11px; color: #6b7280; font-family: 'Geist Mono', ui-monospace, monospace; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: 10.5px; color: #374151; padding: 2px 9px; border-radius: 999px;
+         background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.8); }
+  .bar { height: 4px; border-radius: 99px; background: rgba(0,0,0,.08); overflow: hidden; }
+  .bar > i { display: block; height: 100%; border-radius: 99px; background: var(--accent); transition: width .3s var(--ease); }
+  .foot { display: flex; align-items: center; gap: 10px; margin-top: auto; }
+  .foot .num { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; color: #6b7280; }
+  .foot .sp { flex: 1; }
+  .cbx { appearance: none; width: 17px; height: 17px; flex: 0 0 17px; cursor: pointer; border-radius: 6px;
+    display: grid; place-content: center; background: rgba(255,255,255,.7); border: 1px solid #d1d5db; transition: all .14s var(--ease); }
+  .cbx:checked { background: var(--accent); border-color: var(--accent); }
+  .cbx:checked::after { content: '✓'; font-size: 11px; color: #fff; font-weight: 700; }
+  @media (prefers-reduced-transparency: reduce) {
+    .glass, .btn { background: #ffffff; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="head">
+    <h1>Portfolio</h1><span class="sub">12 projects · 5 done</span>
+    <span class="sp"></span>
+    <button class="btn">All</button>
+    <button class="btn">Pending</button>
+    <button class="btn primary">+ New</button>
+  </div>
+  <div class="grid">
+    <div class="card glass">
+      <div class="row"><span class="dot on"></span><h2>Hyperliquid</h2><span class="sp"></span><span class="meta">S · 12d</span></div>
+      <div class="tags"><span class="tag">Solana</span><span class="tag">Testnet</span><span class="tag">X</span></div>
+      <div class="bar"><i style="width:72%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox" checked><span class="num">8/11 tasks</span><span class="sp"></span><span class="meta">0.8 SOL</span></div>
+    </div>
+    <div class="card glass">
+      <div class="row"><span class="dot"></span><h2>LayerZero V2</h2><span class="sp"></span><span class="meta">A · 34d</span></div>
+      <div class="tags"><span class="tag">Ethereum</span><span class="tag">Mainnet</span></div>
+      <div class="bar"><i style="width:40%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox"><span class="num">4/10 tasks</span><span class="sp"></span><span class="meta">0.4 ETH</span></div>
+    </div>
+    <div class="card glass">
+      <div class="row"><span class="dot on"></span><h2>Eigenlayer</h2><span class="sp"></span><span class="meta">S · 5d</span></div>
+      <div class="tags"><span class="tag">Ethereum</span><span class="tag">Restaking</span><span class="tag">App</span></div>
+      <div class="bar"><i style="width:100%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox" checked><span class="num">9/9 tasks</span><span class="sp"></span><span class="meta">2.1 ETH</span></div>
+    </div>
+    <div class="card glass">
+      <div class="row"><span class="dot"></span><h2>Berachain</h2><span class="sp"></span><span class="meta">B · 48d</span></div>
+      <div class="tags"><span class="tag">Berachain</span><span class="tag">Testnet</span></div>
+      <div class="bar"><i style="width:15%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox"><span class="num">1/7 tasks</span><span class="sp"></span><span class="meta">—</span></div>
+    </div>
+    <div class="card glass">
+      <div class="row"><span class="dot on"></span><h2>Monad</h2><span class="sp"></span><span class="meta">A · 21d</span></div>
+      <div class="tags"><span class="tag">Monad</span><span class="tag">Testnet</span><span class="tag">Desktop</span></div>
+      <div class="bar"><i style="width:58%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox" checked><span class="num">5/9 tasks</span><span class="sp"></span><span class="meta">0.3 MON</span></div>
+    </div>
+    <div class="card glass">
+      <div class="row"><span class="dot"></span><h2>Celestia</h2><span class="sp"></span><span class="meta">C · 60d</span></div>
+      <div class="tags"><span class="tag">Celestia</span><span class="tag">Light node</span></div>
+      <div class="bar"><i style="width:0%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox"><span class="num">0/6 tasks</span><span class="sp"></span><span class="meta">—</span></div>
+    </div>
+  </div>
+</body>
+</html>

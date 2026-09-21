@@ -1,0 +1,86 @@
+{
+  "name": "slavedrop",
+  "version": "1.0.0",
+  "description": "Minimalist local airdrop farming tracker — your data never leaves your machine",
+  "main": "main.js",
+  "author": "brodewa",
+  "license": "MIT",
+  "homepage": "https://github.com/brodewa369/slavedrop",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/brodewa369/slavedrop.git"
+  },
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "dist": "electron-builder",
+    "dist:linux": "electron-builder --linux AppImage deb",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac",
+    "release": "electron-builder --publish always"
+  },
+  "dependencies": {
+    "@phosphor-icons/web": "^2.1.2",
+    "better-sqlite3": "^13.0.3",
+    "electron": "^44.4.3"
+  },
+  "devDependencies": {
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.brodewa.slavedrop",
+    "productName": "SlaveDrop",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "package.json",
+      "src/**/*",
+      "fonts/**/*",
+      "!**/*.bak*",
+      "!**/mockups/**"
+    ],
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "SlaveDrop"
+    },
+    "mac": {
+      "icon": "build/icon.png",
+      "category": "public.app-category.finance",
+      "target": [
+        "dmg"
+      ]
+    },
+    "linux": {
+      "icon": "build/icon.png",
+      "category": "Office",
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "desktop": {
+        "Name": "SlaveDrop",
+        "Comment": "Local airdrop farming tracker",
+        "Categories": "Office;Finance;"
+      }
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "brodewa369",
+      "repo": "slavedrop"
+    }
+  }
+}

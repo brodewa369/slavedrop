@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>R2 · Blueprint Grid</title>
+<style>
+  /* MATERIAL: blueprint grid (CSS repeating lines) + vellum noise
+     FONT: DM Sans (geometric, opsz) + Space Mono */
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+  :root {
+    --bg:#0e1620; --line:rgba(120,180,220,.13); --line-2:rgba(120,180,220,.3);
+    --fg:#dce8f4; --fg-2:#8fb0c8; --fg-3:#5d7d96;
+    --cyan:#6fd3e8; --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family:'DM Sans',system-ui,sans-serif; color:var(--fg); background:var(--bg);
+    min-height:100vh; padding:32px 40px 56px; position:relative; overflow-x:hidden;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px),
+      linear-gradient(var(--line-2) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line-2) 1px, transparent 1px);
+    background-size:24px 24px,24px 24px,120px 120px,120px 120px;
+  }
+  body::before { /* vellum noise */
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:9998; opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* ICONS: Tabler — 24px grid, stroke 2, precise/utilitarian */
+  .ic { width:16px; height:16px; stroke:currentColor; stroke-width:2; fill:none; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+  .head { display:flex; align-items:center; gap:16px; margin-bottom:26px; }
+  .head h1 { font-size:21px; font-weight:700; letter-spacing:-.02em; font-variation-settings:"opsz" 24; }
+  .head .sub { font-family:'Space Mono',monospace; font-size:11px; color:var(--fg-2); letter-spacing:.04em; }
+  .head .sp { flex:1; }
+  .btn { display:flex; align-items:center; gap:7px; font-family:'Space Mono',monospace; font-size:11px; font-weight:700;
+    letter-spacing:.05em; color:var(--fg-2); background:rgba(120,180,220,.05); border:1px solid var(--line);
+    border-radius:6px; padding:8px 12px; cursor:pointer; transition:.2s var(--ease); }
+  .btn:hover { color:var(--fg); border-color:var(--line-2); background:rgba(120,180,220,.11); }
+  .btn.primary { color:#04141c; background:var(--cyan); border-color:var(--cyan); }
+  .btn.primary:hover { background:#8fe0ef; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+  .card { position:relative; background:rgba(14,22,32,.82); border:1px solid var(--line-2); border-radius:10px;
+    padding:16px; transition:.22s var(--ease); cursor:pointer; }
+  .card:hover { transform:translateY(-3px); border-color:var(--cyan); box-shadow:0 14px 34px -14px rgba(0,0,0,.8), 0 0 0 1px rgba(111,211,232,.22); }
+  /* corner ticks — blueprint signature */
+  .card::before,.card::after { content:''; position:absolute; width:9px; height:9px; border:1.5px solid var(--cyan); opacity:0; transition:.22s var(--ease); }
+  .card::before { top:-1px; left:-1px; border-right:none; border-bottom:none; }
+  .card::after { bottom:-1px; right:-1px; border-left:none; border-top:none; }
+  .card:hover::before,.card:hover::after { opacity:.85; }
+  .row { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .box { width:19px; height:19px; border:1.5px solid var(--fg-3); border-radius:5px; display:grid; place-items:center; flex:none; cursor:pointer; transition:.18s var(--ease); }
+  .box:hover { border-color:var(--cyan); }
+  .box.on { background:var(--cyan); border-color:var(--cyan); }
+  .box svg { width:12px; height:12px; stroke:#04141c; stroke-width:3; fill:none; opacity:0; }
+  .box.on svg { opacity:1; }
+  h2 { font-size:15.5px; font-weight:600; letter-spacing:-.01em; font-variation-settings:"opsz" 20; }
+  .sp { flex:1; }
+  .rank { font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.1em; color:var(--cyan);
+    border:1px solid rgba(111,211,232,.35); padding:3px 6px; border-radius:4px; }
+  .tags { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:13px; }
+  .tag { font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.07em; text-transform:uppercase;
+    color:var(--fg-2); border:1px solid var(--line); border-radius:3px; padding:3px 7px; }
+  .bar { height:5px; background:rgba(120,180,220,.13); border-radius:999px; overflow:hidden; margin-bottom:11px; }
+  .bar i { display:block; height:100%; background:linear-gradient(90deg,#3f9ab5,var(--cyan)); border-radius:999px; transition:width .5s var(--ease); }
+  .foot { display:flex; align-items:center; gap:8px; }
+  .num { font-family:'Space Mono',monospace; font-size:10.5px; color:var(--fg-2); }
+  .menu { position:absolute; top:12px; right:12px; width:26px; height:26px; display:grid; place-items:center;
+    color:var(--fg-3); background:none; border:none; cursor:pointer; border-radius:6px; opacity:0; transition:.18s var(--ease); }
+  .card:hover .menu { opacity:1; }
+  .menu:hover { color:var(--cyan); background:rgba(111,211,232,.1); }
+  .day-strip { display:flex; gap:2px; margin-bottom:16px; }
+  .day-strip span { flex:1; height:26px; display:grid; place-items:center; font-family:'Space Mono',monospace;
+    font-size:9px; color:var(--fg-3); border:1px solid var(--line); border-radius:3px; }
+  .day-strip span.now { color:#04141c; background:var(--cyan); border-color:var(--cyan); font-weight:700; }
+</style>
+</head>
+<body>
+  <div class="head">
+    <h1>Portfolio</h1><span class="sub">// 12 nodes · 5 synced</span><span class="sp"></span>
+    <button class="btn">All</button><button class="btn">Pending</button>
+    <button class="btn primary"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New node</button>
+  </div>
+  <div class="day-strip" id="days"></div>
+  <div class="grid" id="grid"></div>
+
+<script>
+const ICONS = {
+  check:'<svg viewBox="0 0 24 24"><path d="M5 12l5 5L19 7"/></svg>',
+  more:'<svg viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="18.5" r="1.4" fill="currentColor" stroke="none"/></svg>',
+  grid:'<svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>',
+  cal:'<svg viewBox="0 0 24 24"><path d="M4 5h16v15H4zM4 10h16M8 3v4M16 3v4"/></svg>',
+};
+const DATA = [
+  ['Hyperliquid','S',72,8,11,['Solana','Testnet','X'],'on'],
+  ['LayerZero V2','A',40,4,10,['Ethereum','Mainnet'],''],
+  ['Eigenlayer','S',100,9,9,['Ethereum','Restaking'],'on'],
+  ['Berachain','B',15,1,7,['Berachain','Testnet'],''],
+  ['Monad','A',58,5,9,['Monad','Desktop'],'on'],
+  ['Celestia','C',0,0,6,['Celestia','Node'],''],
+];
+const DOW=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+const now=new Date().getDay();
+document.getElementById('days').innerHTML = DOW.map((d,i)=>`<span class="${i===now?'now':''}">${d}</span>`).join('');
+document.getElementById('grid').innerHTML = DATA.map(([n,r,p,d,t,tags,on]) => `
+  <div class="card">
+    <button class="menu" data-act="menu">${ICONS.more}</button>
+    <div class="row">
+      <span class="box ${on}" data-act="toggle">${ICONS.check}</span>
+      <h2>${n}</h2><span class="sp"></span><span class="rank">${r}</span>
+    </div>
+    <div class="tags">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    <div class="bar"><i style="width:${p}%"></i></div>
+    <div class="foot"><span class="num">${d}/${t} tasks</span><span class="sp"></span><span class="num">${p}%</span></div>
+  </div>`).join('');
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act="toggle"]'); if (b) b.classList.toggle('on');
+});
+</script>
+</body>
+</html>

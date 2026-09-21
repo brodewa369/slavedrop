@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>C3 · Custom Accent — Duotone + Sparklines</title>
+<style>
+  :root {
+    --accent: #f59e0b; --accent-fg: #1a1206;
+    --ease: cubic-bezier(.16,1,.3,1);
+    --font: -apple-system, system-ui, 'Geist', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #101113; color: #e9ebec; font-family: var(--font); font-size: 13px; padding: 22px; min-height: 100vh;
+    background-image: radial-gradient(40vw 30vw at 85% -10%, color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 65%); }
+  .head { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; flex-wrap: wrap; }
+  .head h1 { font-size: 15px; font-weight: 650; letter-spacing: -0.01em; }
+  .head .sub { color: #7f8792; font-size: 11.5px; }
+  .head .sp { flex: 1; }
+  .btn { height: 30px; padding: 0 12px; border-radius: 8px; border: 1px solid #26292e; background: #181b1f;
+    color: #aab2bb; font: inherit; font-size: 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+    transition: all .16s var(--ease); }
+  .btn:hover { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, #26292e); }
+  .btn.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 600; }
+  .btn.primary:hover { filter: brightness(1.08); }
+  .picker { display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border-radius: 8px;
+    border: 1px solid #26292e; background: #181b1f; cursor: pointer; }
+  .picker .sw { width: 16px; height: 16px; border-radius: 5px; background: var(--accent); }
+  .picker .lbl { font-size: 11.5px; color: #aab2bb; }
+  .swatches { display: flex; gap: 5px; }
+  .swatches button { width: 20px; height: 20px; border-radius: 6px; border: 2px solid transparent; cursor: pointer; transition: transform .14s var(--ease); }
+  .swatches button:hover { transform: scale(1.15); }
+  .swatches button.on { border-color: #e9ebec; }
+  input[type=color] { width: 0; height: 0; opacity: 0; position: absolute; }
+  /* ---- duotone band: tint shifts with accent ---- */
+  .band { height: 4px; border-radius: 99px; margin-bottom: 18px;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 75%, #181b1f), color-mix(in srgb, var(--accent) 22%, #181b1f) 55%, #181b1f); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
+  .card { background: #181b1f; border: 1px solid #26292e; border-radius: 12px; padding: 16px;
+    display: flex; flex-direction: column; gap: 12px; transition: border-color .18s var(--ease), transform .18s var(--ease); }
+  .card:hover { border-color: color-mix(in srgb, var(--accent) 40%, #26292e); transform: translateY(-2px); }
+  .row { display: flex; align-items: center; gap: 10px; }
+  .dot { width: 8px; height: 8px; border-radius: 99px; background: #3d444d; flex: 0 0 8px; }
+  .dot.on { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+  .card h2 { font-size: 13.5px; font-weight: 620; letter-spacing: -0.005em; }
+  .card .meta { font-size: 11px; color: #7f8792; font-family: 'Geist Mono', ui-monospace, monospace; }
+  .spark { display: block; width: 100%; height: 34px; }
+  .spark .line { stroke: var(--accent); stroke-width: 1.8; fill: none; }
+  .spark .area { fill: color-mix(in srgb, var(--accent) 14%, transparent); }
+  .tags { display: flex; gap: 5px; flex-wrap: wrap; }
+  .tag { font-size: 10.5px; color: #aab2bb; border: 1px solid #26292e; border-radius: 5px; padding: 1px 7px;
+    background: color-mix(in srgb, var(--accent) 7%, #181b1f); }
+  .bar { height: 4px; border-radius: 99px; background: #22262c; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .3s var(--ease); }
+  .foot { display: flex; align-items: center; gap: 10px; margin-top: auto; }
+  .foot .num { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; color: #7f8792; }
+  .foot .sp { flex: 1; }
+  .delta { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; color: var(--accent); }
+  .cbx { appearance: none; width: 16px; height: 16px; flex: 0 0 16px; border: 1.5px solid #3d444d; border-radius: 5px;
+    cursor: pointer; display: grid; place-content: center; background: transparent; transition: all .14s var(--ease); }
+  .cbx:checked { background: var(--accent); border-color: var(--accent); }
+  .cbx:checked::after { content: '✓'; font-size: 10px; color: var(--accent-fg); font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="head">
+    <h1>Portfolio</h1><span class="sub">12 projects · 5 done</span>
+    <span class="sp"></span>
+    <label class="picker" for="accent"><span class="sw"></span><span class="lbl">Accent</span></label>
+    <input type="color" id="accent" value="#f59e0b">
+    <div class="swatches" id="swatches">
+      <button data-c="#f59e0b" style="background:#f59e0b" class="on"></button>
+      <button data-c="#34d399" style="background:#34d399"></button>
+      <button data-c="#818cf8" style="background:#818cf8"></button>
+      <button data-c="#f472b6" style="background:#f472b6"></button>
+      <button data-c="#22d3ee" style="background:#22d3ee"></button>
+    </div>
+    <button class="btn primary">+ New</button>
+  </div>
+  <div class="band"></div>
+  <div class="grid">
+    <div class="card">
+      <div class="row"><span class="dot on"></span><h2>Hyperliquid</h2><span class="sp"></span><span class="meta">S · 12d</span></div>
+      <svg class="spark" viewBox="0 0 300 34" preserveAspectRatio="none"><path class="area" d="M0,28 L30,24 L60,26 L90,16 L120,18 L150,10 L180,13 L210,6 L240,8 L270,3 L300,4 L300,34 L0,34 Z"/><path class="line" d="M0,28 L30,24 L60,26 L90,16 L120,18 L150,10 L180,13 L210,6 L240,8 L270,3 L300,4"/></svg>
+      <div class="tags"><span class="tag">Solana</span><span class="tag">Testnet</span></div>
+      <div class="bar"><i style="width:72%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox" checked><span class="num">8/11 tasks</span><span class="sp"></span><span class="delta">+12.4%</span></div>
+    </div>
+    <div class="card">
+      <div class="row"><span class="dot"></span><h2>LayerZero V2</h2><span class="sp"></span><span class="meta">A · 34d</span></div>
+      <svg class="spark" viewBox="0 0 300 34" preserveAspectRatio="none"><path class="area" d="M0,20 L30,22 L60,15 L90,18 L120,12 L150,14 L180,9 L210,11 L240,7 L270,9 L300,5 L300,34 L0,34 Z"/><path class="line" d="M0,20 L30,22 L60,15 L90,18 L120,12 L150,14 L180,9 L210,11 L240,7 L270,9 L300,5"/></svg>
+      <div class="tags"><span class="tag">Ethereum</span><span class="tag">Mainnet</span></div>
+      <div class="bar"><i style="width:40%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox"><span class="num">4/10 tasks</span><span class="sp"></span><span class="delta">+3.1%</span></div>
+    </div>
+    <div class="card">
+      <div class="row"><span class="dot on"></span><h2>Eigenlayer</h2><span class="sp"></span><span class="meta">S · 5d</span></div>
+      <svg class="spark" viewBox="0 0 300 34" preserveAspectRatio="none"><path class="area" d="M0,30 L30,25 L60,20 L90,22 L120,14 L150,16 L180,8 L210,10 L240,5 L270,6 L300,2 L300,34 L0,34 Z"/><path class="line" d="M0,30 L30,25 L60,20 L90,22 L120,14 L150,16 L180,8 L210,10 L240,5 L270,6 L300,2"/></svg>
+      <div class="tags"><span class="tag">Ethereum</span><span class="tag">Restaking</span></div>
+      <div class="bar"><i style="width:100%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox" checked><span class="num">9/9 tasks</span><span class="sp"></span><span class="delta">+28.9%</span></div>
+    </div>
+    <div class="card">
+      <div class="row"><span class="dot"></span><h2>Berachain</h2><span class="sp"></span><span class="meta">B · 48d</span></div>
+      <svg class="spark" viewBox="0 0 300 34" preserveAspectRatio="none"><path class="area" d="M0,18 L30,20 L60,24 L90,19 L120,22 L150,26 L180,21 L210,24 L240,28 L270,25 L300,27 L300,34 L0,34 Z"/><path class="line" d="M0,18 L30,20 L60,24 L90,19 L120,22 L150,26 L180,21 L210,24 L240,28 L270,25 L300,27"/></svg>
+      <div class="tags"><span class="tag">Berachain</span></div>
+      <div class="bar"><i style="width:15%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox"><span class="num">1/7 tasks</span><span class="sp"></span><span class="delta">-4.2%</span></div>
+    </div>
+    <div class="card">
+      <div class="row"><span class="dot on"></span><h2>Monad</h2><span class="sp"></span><span class="meta">A · 21d</span></div>
+      <svg class="spark" viewBox="0 0 300 34" preserveAspectRatio="none"><path class="area" d="M0,26 L30,22 L60,24 L90,17 L120,19 L150,13 L180,15 L210,9 L240,11 L270,6 L300,8 L300,34 L0,34 Z"/><path class="line" d="M0,26 L30,22 L60,24 L90,17 L120,19 L150,13 L180,15 L210,9 L240,11 L270,6 L300,8"/></svg>
+      <div class="tags"><span class="tag">Monad</span><span class="tag">Desktop</span></div>
+      <div class="bar"><i style="width:58%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox" checked><span class="num">5/9 tasks</span><span class="sp"></span><span class="delta">+7.6%</span></div>
+    </div>
+    <div class="card">
+      <div class="row"><span class="dot"></span><h2>Celestia</h2><span class="sp"></span><span class="meta">C · 60d</span></div>
+      <svg class="spark" viewBox="0 0 300 34" preserveAspectRatio="none"><path class="area" d="M0,22 L30,24 L60,21 L90,23 L120,20 L150,22 L180,19 L210,21 L240,18 L270,20 L300,17 L300,34 L0,34 Z"/><path class="line" d="M0,22 L30,24 L60,21 L90,23 L120,20 L150,22 L180,19 L210,21 L240,18 L270,20 L300,17"/></svg>
+      <div class="tags"><span class="tag">Celestia</span></div>
+      <div class="bar"><i style="width:0%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox"><span class="num">0/6 tasks</span><span class="sp"></span><span class="delta">+0.0%</span></div>
+    </div>
+  </div>
+<script>
+  const root = document.documentElement, picker = document.getElementById('accent');
+  function setAccent(hex) {
+    root.style.setProperty('--accent', hex);
+    picker.value = hex;
+    document.querySelectorAll('#swatches button').forEach(b => b.classList.toggle('on', b.dataset.c.toLowerCase() === hex.toLowerCase()));
+    const n = parseInt(hex.slice(1), 16);
+    const lum = (0.299*((n>>16)&255) + 0.587*((n>>8)&255) + 0.114*(n&255)) / 255;
+    root.style.setProperty('--accent-fg', lum > 0.6 ? '#101113' : '#ffffff');
+  }
+  picker.addEventListener('input', e => setAccent(e.target.value));
+  document.querySelectorAll('#swatches button').forEach(b =>
+    b.addEventListener('click', () => setAccent(b.dataset.c)));
+</script>
+</body>
+</html>

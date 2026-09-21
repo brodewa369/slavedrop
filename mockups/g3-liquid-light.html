@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>G3 · Liquid Glass Light Tint</title>
+<style>
+  /* MATERIAL: light-mode liquid glass — translucent on tinted pastel blobs
+     FONT: DM Sans + Space Mono */
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Space+Mono:wght@400;700&display=swap');
+  :root { --ease:cubic-bezier(.16,1,.3,1); }
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'DM Sans',system-ui,sans-serif; color:#1b2233;
+    min-height:100vh; padding:30px 40px 56px; overflow-x:hidden; position:relative;
+    background:
+      radial-gradient(52vw 44vw at 4% -6%, #d3e8ff 0%, transparent 62%),
+      radial-gradient(48vw 40vw at 98% 2%, #ffe1f0 0%, transparent 62%),
+      radial-gradient(60vw 50vw at 50% 118%, #e2ddff 0%, transparent 64%),
+      radial-gradient(40vw 36vw at 88% 92%, #dcf5ec 0%, transparent 62%),
+      #f2f4f9;
+  }
+  .ic { width:16px; height:16px; stroke:currentColor; stroke-width:2; fill:none; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+  .head { display:flex; align-items:center; gap:15px; margin-bottom:26px; }
+  .head h1 { font-size:22px; font-weight:700; letter-spacing:-.025em; font-variation-settings:"opsz" 28; }
+  .head .sub { font-family:'Space Mono',monospace; font-size:10.5px; color:#5d6a86; }
+  .head .sp { flex:1; }
+  .btn { display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; color:#2b3a5c;
+    background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.7); border-radius:12px;
+    padding:9px 15px; cursor:pointer; transition:.2s var(--ease);
+    -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.9), 0 8px 20px -12px rgba(30,40,70,.35); }
+  .btn:hover { background:rgba(255,255,255,.75); transform:translateY(-1px); }
+  .btn.primary { color:#fff; background:rgba(43,58,92,.92); border-color:rgba(255,255,255,.45); }
+  .btn.primary:hover { background:rgba(43,58,92,1); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:16px; }
+  .card { position:relative; border-radius:20px; padding:17px; cursor:pointer; transition:transform .25s var(--ease), box-shadow .25s var(--ease); }
+  .card:hover { transform:translateY(-3px); box-shadow:0 26px 60px -24px rgba(30,40,70,.45); }
+  .glass { position:relative;
+    background:rgba(255,255,255,.42);
+    border:1px solid rgba(255,255,255,.75);
+    -webkit-backdrop-filter:blur(22px) saturate(160%);
+    backdrop-filter:blur(22px) saturate(160%);
+    box-shadow:
+      inset 0 1.5px 0 rgba(255,255,255,.95),
+      inset 0 -1px 0 rgba(255,255,255,.4),
+      inset 0 0 36px rgba(255,255,255,.28),
+      0 18px 44px -20px rgba(30,40,70,.4);
+  }
+  .row { display:flex; align-items:center; gap:11px; margin-bottom:12px; }
+  .box { width:20px; height:20px; border-radius:6px; border:1.5px solid rgba(43,58,92,.35); display:grid; place-items:center;
+    flex:none; cursor:pointer; transition:.18s var(--ease); background:rgba(255,255,255,.5); }
+  .box:hover { border-color:rgba(43,58,92,.6); }
+  .box.on { background:#2b3a5c; border-color:#2b3a5c; }
+  .box svg { width:12px; height:12px; stroke:#fff; stroke-width:3.2; fill:none; opacity:0; }
+  .box.on svg { opacity:1; }
+  h2 { font-size:16px; font-weight:600; letter-spacing:-.015em; font-variation-settings:"opsz" 20; }
+  .sp { flex:1; }
+  .rank { font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.07em;
+    color:#2b3a5c; background:rgba(255,255,255,.6); border:1px solid rgba(43,58,92,.25); padding:3px 8px; border-radius:6px; }
+  .tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .tag { font-size:10.5px; font-weight:500; color:#3a4763; background:rgba(255,255,255,.5);
+    border:1px solid rgba(43,58,92,.18); border-radius:999px; padding:3px 10px; }
+  .bar { height:7px; background:rgba(43,58,92,.14); border-radius:999px; overflow:hidden; margin-bottom:12px;
+    box-shadow:inset 0 1px 2px rgba(43,58,92,.18); }
+  .bar i { display:block; height:100%; background:linear-gradient(90deg,#7d9bd6,#2b3a5c); border-radius:999px; transition:width .5s var(--ease); }
+  .foot { display:flex; align-items:center; gap:9px; }
+  .num { font-family:'Space Mono',monospace; font-size:10.5px; color:#5d6a86; }
+  .menu { position:absolute; top:13px; right:13px; width:28px; height:28px; border-radius:9px; display:grid; place-items:center;
+    color:#3a4763; background:rgba(255,255,255,.5); border:1px solid rgba(43,58,92,.2); cursor:pointer;
+    opacity:0; transition:.18s var(--ease); }
+  .card:hover .menu { opacity:1; }
+  .menu:hover { color:#1b2233; background:rgba(255,255,255,.8); }
+</style>
+</head>
+<body>
+  <div class="head">
+    <h1>Portfolio</h1><span class="sub">12 projects · 5 done</span><span class="sp"></span>
+    <button class="btn">All</button><button class="btn">Pending</button>
+    <button class="btn primary"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New project</button>
+  </div>
+  <div class="grid" id="grid"></div>
+
+<script>
+const ICONS = {
+  check:'<svg viewBox="0 0 24 24"><path d="M5 12.5l5 5L19 7"/></svg>',
+  more:'<svg viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="18.5" r="1.5" fill="currentColor" stroke="none"/></svg>',
+};
+const DATA = [
+  ['Hyperliquid','S',72,8,11,['Solana','Testnet','X'],'on'],
+  ['LayerZero V2','A',40,4,10,['Ethereum','Mainnet'],''],
+  ['Eigenlayer','S',100,9,9,['Ethereum','Restaking','App'],'on'],
+  ['Berachain','B',15,1,7,['Berachain','Testnet'],''],
+  ['Monad','A',58,5,9,['Monad','Desktop'],'on'],
+  ['Celestia','C',0,0,6,['Celestia','Light node'],''],
+];
+document.getElementById('grid').innerHTML = DATA.map(([n,r,p,d,t,tags,on]) => `
+  <div class="card glass">
+    <button class="menu" data-act="menu">${ICONS.more}</button>
+    <div class="row">
+      <span class="box ${on}" data-act="toggle">${ICONS.check}</span>
+      <h2>${n}</h2><span class="sp"></span><span class="rank">${r}</span>
+    <div class="tags">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    <div class="bar"><i style="width:${p}%"></i></div>
+    <div class="foot"><span class="num">${d}/${t} tasks</span><span class="sp"></span><span class="num">${p}%</span></div>
+  </div>`).join('');
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act="toggle"]'); if (b) b.classList.toggle('on');
+});
+</script>
+</body>
+</html>

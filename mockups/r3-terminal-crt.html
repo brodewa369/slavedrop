@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>R3 · Terminal CRT</title>
+<style>
+  /* MATERIAL: CRT scanlines + phosphor glow + vignette
+     FONT: JetBrains Mono全程 (single-family weight hierarchy) */
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+  :root {
+    --bg:#050a06; --panel:#0a120b; --line:#1d2f22;
+    --ph:#39ff8b; --ph-2:#7ee0ab; --ph-3:#3d7a58; --amber:#ffb000;
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'JetBrains Mono',monospace; color:var(--ph); background:var(--bg);
+    min-height:100vh; padding:28px 36px 52px; position:relative; overflow-x:hidden;
+    text-shadow:0 0 7px rgba(57,255,139,.45), 0 0 2px rgba(57,255,139,.8); }
+  /* scanlines */
+  body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:9997;
+    background:repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px); }
+  /* vignette */
+  body::after { content:''; position:fixed; inset:0; pointer-events:none; z-index:9996;
+    background:radial-gradient(120% 100% at 50% 40%, transparent 40%, rgba(0,0,0,.6) 100%); }
+  .ic { width:15px; height:15px; stroke:currentColor; stroke-width:2; fill:none; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+  .head { display:flex; align-items:center; gap:14px; margin-bottom:20px; padding-bottom:12px; border-bottom:1px dashed var(--ph-3); }
+  .head h1 { font-size:17px; font-weight:700; letter-spacing:.06em; }
+  .head .prompt { color:var(--ph-3); font-size:14px; }
+  .head .sub { font-size:10.5px; color:var(--ph-2); letter-spacing:.06em; opacity:.8; }
+  .head .sp { flex:1; }
+  .btn { display:flex; align-items:center; gap:6px; font-size:10.5px; font-weight:600; letter-spacing:.08em;
+    color:var(--ph-2); background:transparent; border:1px solid var(--ph-3); border-radius:0; padding:7px 11px; cursor:pointer; transition:.18s var(--ease); }
+  .btn:hover { color:#000; background:var(--ph); border-color:var(--ph); text-shadow:none; }
+  .statusbar { display:flex; gap:18px; font-size:10px; color:var(--ph-3); letter-spacing:.1em; margin-bottom:16px; }
+  .statusbar b { color:var(--ph-2); font-weight:600; }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  th { font-size:9.5px; font-weight:700; letter-spacing:.16em; color:var(--ph-3); text-align:left;
+    padding:10px 8px 7px; border-bottom:1px solid var(--ph-3); text-shadow:none; }
+  td { padding:12px 8px; border-bottom:1px dotted #14261a; }
+  tbody tr { transition:.14s; cursor:pointer; }
+  tbody tr:hover { background:rgba(57,255,139,.07); }
+  tbody tr.done { color:var(--ph-3); }
+  tbody tr.done .pname { text-decoration:line-through; text-decoration-color:var(--ph-3); }
+  .pname { display:flex; align-items:center; gap:10px; font-weight:600; }
+  .cursor-blink { display:inline-block; width:7px; height:13px; background:var(--ph); animation:blink 1.1s steps(1) infinite; vertical-align:-2px; }
+  @keyframes blink { 50% { opacity:0; } }
+  .box { width:15px; height:15px; border:1.5px solid var(--ph-3); display:grid; place-items:center; flex:none; cursor:pointer; transition:.15s; }
+  .box.on { border-color:var(--ph); }
+  .box svg { width:10px; height:10px; stroke:var(--ph); stroke-width:3; fill:none; opacity:0; }
+  .box.on svg { opacity:1; }
+  .rank { font-size:10px; font-weight:700; letter-spacing:.1em; color:var(--ph-3); }
+  .rank.s { color:var(--amber); text-shadow:0 0 8px rgba(255,176,0,.6); }
+  .bar { width:110px; height:8px; border:1px solid var(--ph-3); display:flex; align-items:center; padding:1px; gap:1px; }
+  .bar i { display:block; height:100%; background:var(--ph); box-shadow:0 0 6px rgba(57,255,139,.8); }
+  .num { font-size:11px; color:var(--ph-2); }
+  .acts { display:flex; gap:6px; justify-content:flex-end; opacity:.35; transition:.16s var(--ease); }
+  tr:hover .acts { opacity:1; }
+  .acts button { background:none; border:none; cursor:pointer; color:var(--ph-2); padding:3px; display:grid; place-items:center; }
+  .acts button:hover { color:var(--amber); }
+  .foot { margin-top:18px; font-size:10px; color:var(--ph-3); letter-spacing:.1em; }
+</style>
+</head>
+<body>
+  <div class="head">
+    <span class="prompt">airdrop@local:~$</span><h1>portfolio --list</h1>
+    <span class="sub">12 entries · 5 cleared</span><span class="sp"></span>
+    <button class="btn">--all</button><button class="btn">--pending</button>
+    <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>--new</button>
+  </div>
+  <div class="statusbar"><span>MEM <b>41%</b></span><span>NET <b>OK</b></span><span>SYNC <b>5/12</b></span><span id="clock"></span></div>
+  <table>
+    <thead><tr><th style="width:30px">#</th><th>PROJECT</th><th style="width:46px">RANK</th><th style="width:130px">PROGRESS</th><th style="width:74px">TASKS</th><th style="width:88px">DUE</th><th style="width:80px;text-align:right">OPS</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <div class="foot">EOF — press q to exit<span class="cursor-blink"></span></div>
+
+<script>
+const ICONS = {
+  check:'<svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg>',
+  edit:'<svg viewBox="0 0 24 24"><path d="M16.5 3.5l4 4L8 20H4v-4z"/><path d="M14.5 5.5l4 4"/></svg>',
+  del:'<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>',
+  more:'<svg viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="18.5" r="1.4" fill="currentColor" stroke="none"/></svg>',
+};
+const DATA = [
+  ['01','Hyperliquid','S',72,8,11,'SEP 23',1],
+  ['02','LayerZero V2','A',40,4,10,'OCT 12',0],
+  ['03','Eigenlayer','S',100,9,9,'SEP 21',1],
+  ['04','Berachain','B',15,1,7,'NOV 08',0],
+  ['05','Monad','A',58,5,9,'OCT 02',1],
+];
+const rows = document.getElementById('rows');
+rows.innerHTML = DATA.map(([id,n,r,p,d,t,due,on]) => `
+  <tr class="${on?'done':''}">
+    <td style="color:var(--ph-3)">${id}</td>
+    <td><div class="pname"><span class="box ${on?'on':''}" data-act="toggle">${ICONS.check}</span>${n}</div></td>
+    <td><span class="rank ${r==='S'?'s':''}">${r}</span></td>
+    <td><div class="bar"><i style="width:${p}%"></i></div></td>
+    <td><span class="num">${d}/${t}</span></td>
+    <td><span class="num">${due}</span></td>
+    <td><div class="acts">
+      <button data-act="edit">${ICONS.edit}</button><button data-act="del">${ICONS.del}</button><button data-act="more">${ICONS.more}</button>
+    </div></td>
+  </tr>`).join('');
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act="toggle"]'); if (!b) return;
+  b.classList.toggle('on'); b.closest('tr').classList.toggle('done');
+});
+function clock(){ const d=new Date(); document.getElementById('clock').innerHTML =
+  'TIME <b>'+d.toLocaleTimeString('en-GB')+'</b>'; }
+clock(); setInterval(clock, 1000);
+</script>
+</body>
+</html>

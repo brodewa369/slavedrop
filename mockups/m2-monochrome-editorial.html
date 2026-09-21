@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>M2 · Monochrome Editorial</title>
+<style>
+  :root {
+    --bg: #f6f5f2; --surface: #ffffff; --line: #e2ded6; --line-2: #d3cec4;
+    --ink: #15171a; --ink-2: #5c6268; --ink-3: #9aa0a4;
+    --r: 4px; --serif: 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+    --sans: -apple-system, system-ui, sans-serif;
+    --mono: 'Geist Mono', ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 13px; padding: 34px 40px; }
+  .masthead { border-bottom: 2px solid var(--ink); padding-bottom: 14px; margin-bottom: 26px; display: flex; align-items: flex-end; gap: 16px; }
+  .masthead .no { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--ink-2); }
+  .masthead h1 { font-family: var(--serif); font-size: 30px; font-weight: 400; letter-spacing: -0.015em; line-height: 1; }
+  .masthead .date { margin-left: auto; font-family: var(--mono); font-size: 10px; color: var(--ink-2); letter-spacing: .08em; }
+  .stat-row { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line-2); margin-bottom: 26px; }
+  .stat { padding: 14px 0 12px; border-right: 1px solid var(--line); }
+  .stat:last-child { border-right: none; }
+  .stat .k { font-family: var(--mono); font-size: 9.5px; letter-spacing: .13em; color: var(--ink-3); text-transform: uppercase; }
+  .stat .v { font-family: var(--serif); font-size: 24px; line-height: 1.2; }
+  .list { display: flex; flex-direction: column; border-top: 1px solid var(--line-2); }
+  .item { display: grid; grid-template-columns: 26px 1.6fr 1fr .8fr 90px; gap: 14px; align-items: center;
+    padding: 13px 0; border-bottom: 1px solid var(--line); transition: background .15s; }
+  .item:hover { background: rgba(0,0,0,.025); }
+  .item .idx { font-family: var(--mono); font-size: 10px; color: var(--ink-3); }
+  .item .name { font-size: 13.5px; font-weight: 560; letter-spacing: -0.005em; }
+  .item .name small { display: block; font-weight: 400; color: var(--ink-3); font-size: 10.5px; font-family: var(--mono); }
+  .item .chan { font-size: 11.5px; color: var(--ink-2); }
+  .bar { height: 2px; background: var(--line); }
+  .bar > i { display: block; height: 100%; background: var(--ink); }
+  .item .val { font-family: var(--mono); font-size: 11px; text-align: right; color: var(--ink-2); }
+  .item.done .name { text-decoration: line-through; color: var(--ink-3); }
+  .rule { height: 2px; background: var(--ink); margin-top: 26px; }
+  .foot { display: flex; justify-content: space-between; margin-top: 10px; font-family: var(--mono); font-size: 9.5px; color: var(--ink-3); letter-spacing: .1em; }
+</style>
+</head>
+<body>
+  <div class="masthead">
+    <div>
+      <div class="no">VOL. 07 — PORTFOLIO LEDGER</div>
+      <h1>Airdrop Tracker</h1>
+    </div>
+    <span class="date">MONDAY, 21 SEPTEMBER 2026</span>
+  </div>
+  <div class="stat-row">
+    <div class="stat"><div class="k">Projects</div><div class="v">12</div></div>
+    <div class="stat"><div class="k">Completed</div><div class="v">05</div></div>
+    <div class="stat"><div class="k">In Progress</div><div class="v">04</div></div>
+    <div class="stat"><div class="k">Spend</div><div class="v">$412</div></div>
+  </div>
+  <div class="list">
+    <div class="item done"><span class="idx">01</span><div class="name">Hyperliquid<small>solana · testnet</small></div><span class="chan">X + Discord</span><div class="bar"><i style="width:100%"></i></div><span class="val">0.8 SOL</span></div>
+    <div class="item"><span class="idx">02</span><div class="name">LayerZero V2<small>ethereum · mainnet</small></div><span class="chan">X + Quests</span><div class="bar"><i style="width:40%"></i></div><span class="val">0.4 ETH</span></div>
+    <div class="item done"><span class="idx">03</span><div class="name">Eigenlayer<small>ethereum · restaking</small></div><span class="chan">App</span><div class="bar"><i style="width:100%"></i></div><span class="val">2.1 ETH</span></div>
+    <div class="item"><span class="idx">04</span><div class="name">Berachain<small>berachain · testnet</small></div><span class="chan">X</span><div class="bar"><i style="width:15%"></i></div><span class="val">—</span></div>
+    <div class="item"><span class="idx">05</span><div class="name">Monad<small>monad · testnet</small></div><span class="chan">Desktop node</span><div class="bar"><i style="width:58%"></i></div><span class="val">0.3 MON</span></div>
+    <div class="item"><span class="idx">06</span><div class="name">Celestia<small>celestia · light node</small></div><span class="chan">—</span><div class="bar"><i style="width:0%"></i></div><span class="val">—</span></div>
+  </div>
+  <div class="rule"></div>
+  <div class="foot"><span>SET IN GEIST &amp; IOWAN</span><span>END OF LEDGER</span></div>
+</body>
+</html>

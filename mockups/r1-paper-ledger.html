@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>R1 · Paper Ledger</title>
+<style>
+  /* MATERIAL: paper grain — SVG feTurbulence overlaid via blend mode
+     FONT: Newsreader (display serif, opsz) + IBM Plex Mono (data) */
+  @import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,0,500;6..72,0,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+  :root {
+    --paper:#f4f1ea; --paper-2:#ece7dc; --ink:#1c1b19; --ink-2:#5c5a55; --ink-3:#8e8b84;
+    --rule:#d8d2c4; --accent:#1c1b19; --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  html { -webkit-font-smoothing:antialiased; }
+  body {
+    font-family:'Newsreader',Georgia,serif; color:var(--ink); background:var(--paper);
+    min-height:100vh; padding:36px 48px 64px; position:relative; overflow-x:hidden;
+  }
+  /* paper grain: noise SVG di-layer multiply */
+  body::before {
+    content:''; position:fixed; inset:0; pointer-events:none; z-index:9999; opacity:.28;
+    mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.16'/%3E%3C/svg%3E");
+  }
+  /* ICONS: Iconoir — hand-drawn geometric, stroke 1.5, distinct dari Lucide */
+  .ic { width:17px; height:17px; stroke:currentColor; stroke-width:1.5; fill:none; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+  .head { display:flex; align-items:flex-end; gap:20px; padding-bottom:16px; border-bottom:2px solid var(--ink); margin-bottom:8px; }
+  .head h1 { font-size:30px; font-weight:500; letter-spacing:-.015em; font-variation-settings:"opsz" 40; }
+  .head .sub { font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ink-2); letter-spacing:.09em; text-transform:uppercase; padding-bottom:5px; }
+  .head .sp { flex:1; }
+  .btn { display:flex; align-items:center; gap:7px; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--ink); background:transparent;
+    border:1px solid var(--rule); border-radius:2px; padding:8px 13px; cursor:pointer; transition:.2s var(--ease); }
+  .btn:hover { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  .btn.solid { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  .btn.solid:hover { background:var(--paper); color:var(--ink); }
+  .rule-thin { height:1px; background:var(--rule); margin:0 0 2px; }
+  table.ledger { width:100%; border-collapse:collapse; }
+  table.ledger th { font-family:'IBM Plex Mono',monospace; font-size:9.5px; font-weight:600; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-3); text-align:left; padding:14px 10px 8px; border-bottom:1px solid var(--rule); }
+  table.ledger td { padding:15px 10px; border-bottom:1px solid var(--rule); vertical-align:middle;
+    font-size:17px; font-weight:400; font-variation-settings:"opsz" 14; }
+  table.ledger tbody tr { transition:background .18s var(--ease); cursor:pointer; }
+  table.ledger tbody tr:hover { background:rgba(28,27,25,.055); }
+  .pid { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-3); letter-spacing:.05em; }
+  .pname { display:flex; align-items:center; gap:11px; }
+  .box { width:15px; height:15px; border:1.5px solid var(--ink); border-radius:1px; display:grid; place-items:center; flex:none; cursor:pointer; transition:.18s var(--ease); }
+  .box.on { background:var(--ink); }
+  .box.on svg { stroke:var(--paper); }
+  .box svg { width:11px; height:11px; stroke:var(--ink); stroke-width:2.4; fill:none; opacity:0; }
+  .box.on svg { opacity:1; }
+  .rank { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600; letter-spacing:.08em;
+    border:1px solid var(--rule); padding:3px 7px; border-radius:2px; color:var(--ink-2); }
+  .rank.s { border-color:var(--ink); background:var(--ink); color:var(--paper); }
+  .bar { width:120px; height:5px; background:var(--paper-2); border:1px solid var(--rule); border-radius:999px; overflow:hidden; }
+  .bar i { display:block; height:100%; background:var(--ink); border-radius:999px; transition:width .5s var(--ease); }
+  .num { font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--ink-2); }
+  .date { font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-3); }
+  .acts { display:flex; gap:4px; justify-content:flex-end; opacity:0; transition:.18s var(--ease); }
+  tr:hover .acts { opacity:1; }
+  .acts button { background:none; border:none; cursor:pointer; color:var(--ink-3); padding:4px; border-radius:3px; display:grid; place-items:center; transition:.15s; }
+  .acts button:hover { color:var(--ink); background:rgba(28,27,25,.08); }
+  .foot { margin-top:22px; padding-top:14px; border-top:1px solid var(--rule); display:flex; gap:16px;
+    font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ink-3); letter-spacing:.06em; text-transform:uppercase; }
+</style>
+</head>
+<body>
+  <div class="head">
+    <h1>Portfolio</h1>
+    <span class="sub">Ledger · 12 entries · 5 cleared</span>
+    <span class="sp"></span>
+    <button class="btn"><svg class="ic" viewBox="0 0 24 24"><path d="M3 5h18M3 12h18M3 19h18"/></svg>All</button>
+    <button class="btn">Pending</button>
+    <button class="btn solid"><svg class="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>New entry</button>
+  </div>
+  <div class="rule-thin"></div>
+  <table class="ledger">
+    <thead><tr>
+      <th style="width:34px"></th><th>Project</th><th style="width:52px">Rank</th>
+      <th style="width:150px">Progress</th><th style="width:80px">Tasks</th><th style="width:96px">Due</th><th style="width:70px;text-align:right">Edit</th>
+    </tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <div class="foot"><span>Sorted by entry no.</span><span>·</span><span>Paper ledger · grain 0.16</span></div>
+
+<script>
+const ICONS = {
+  check:'<svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg>',
+  more:'<svg viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="18.5" r="1.3" fill="currentColor" stroke="none"/></svg>',
+  pencil:'<svg viewBox="0 0 24 24"><path d="M16.5 3.5l4 4L8 20H4v-4z"/><path d="M14.5 5.5l4 4"/></svg>',
+  trash:'<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>',
+};
+const DATA = [
+  ['001','Hyperliquid','S',72,8,11,'Sep 23','on'],
+  ['002','LayerZero V2','A',40,4,10,'Oct 12',''],
+  ['003','Eigenlayer','S',100,9,9,'Sep 21','on'],
+  ['004','Berachain','B',15,1,7,'Nov 08',''],
+  ['005','Monad','A',58,5,9,'Oct 02','on'],
+];
+const rows = document.getElementById('rows');
+rows.innerHTML = DATA.map(([id,name,r,p,d,t,due,on]) => `
+  <tr>
+    <td><span class="pid">${id}</span></td>
+    <td><div class="pname">
+      <span class="box ${on}" data-act="toggle">${ICONS.check}</span>
+      <span>${name}</span>
+    </div></td>
+    <td><span class="rank ${r==='S'?'s':''}">${r}</span></td>
+    <td><div class="bar"><i style="width:${p}%"></i></div></td>
+    <td><span class="num">${d}/${t}</span></td>
+    <td><span class="date">${due}</span></td>
+    <td><div class="acts">
+      <button data-act="edit" title="Edit">${ICONS.pencil}</button>
+      <button data-act="del" title="Delete">${ICONS.trash}</button>
+      <button data-act="menu" title="More">${ICONS.more}</button>
+    </div></td>
+  </tr>`).join('');
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  if (b.dataset.act === 'toggle') { b.classList.toggle('on'); }
+});
+</script>
+</body>
+</html>

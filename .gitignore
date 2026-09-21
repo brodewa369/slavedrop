@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+Thumbs.db
+# local runtime data (never ship)
+*.db
+*.db-journal
+src/*.bak*

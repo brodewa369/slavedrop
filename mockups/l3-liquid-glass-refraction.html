@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>L3 · Liquid Glass Refraction (SVG displacement)</title>
+<style>
+  :root {
+    --accent: #7dd3fc; --ease: cubic-bezier(.16,1,.3,1);
+    --font: -apple-system, system-ui, 'Geist', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font); font-size: 13px; color: #eef3f7;
+    min-height: 100vh; padding: 24px; overflow-x: hidden;
+    background:
+      repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0 12px, transparent 12px 24px),
+      radial-gradient(50vw 40vw at 10% -10%, #155e75 0%, transparent 60%),
+      radial-gradient(46vw 36vw at 108% 8%, #3730a3 0%, transparent 60%),
+      radial-gradient(55vw 45vw at 50% 130%, #831843 0%, transparent 65%),
+      #06080b;
+  }
+  /* refraction: feTurbulence + feDisplacementMap bend what's behind the pane.
+     Browsers without SVG-in-backdrop support fall back to the blur layer below. */
+  .glass {
+    position: relative;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(255,255,255,.06);
+    box-shadow:
+      inset 0 1.5px 0 rgba(255,255,255,.3),
+      inset 0 -1px 0 rgba(255,255,255,.07),
+      0 22px 50px -18px rgba(0,0,0,.85);
+  }
+  @supports ((backdrop-filter: url(#refract)) or (-webkit-backdrop-filter: url(#refract))) {
+    .glass {
+      -webkit-backdrop-filter: url(#refract) blur(2px) saturate(150%);
+      backdrop-filter: url(#refract) blur(2px) saturate(150%);
+    }
+  }
+  @supports not ((backdrop-filter: url(#refract))) {
+    .glass {
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      backdrop-filter: blur(18px) saturate(160%);
+    }
+  }
+  .head { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+  .head h1 { font-size: 17px; font-weight: 650; letter-spacing: -0.015em; }
+  .head .sub { color: #93a0ad; font-size: 11.5px; }
+  .head .sp { flex: 1; }
+  .btn {
+    height: 32px; padding: 0 14px; border-radius: 999px; font: inherit; font-size: 12.5px; cursor: pointer;
+    background: rgba(255,255,255,.08); color: #c6ced8; border: 1px solid rgba(255,255,255,.16);
+    display: inline-flex; align-items: center; gap: 7px; transition: all .16s var(--ease);
+  }
+  .btn:hover { color: #fff; background: rgba(255,255,255,.15); }
+  .btn.primary { background: var(--accent); color: #06222f; border-color: transparent; font-weight: 600; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 18px; }
+  .card { padding: 18px; display: flex; flex-direction: column; gap: 14px; transition: transform .2s var(--ease); }
+  .card:hover { transform: translateY(-3px); }
+  .row { display: flex; align-items: center; gap: 10px; }
+  .dot { width: 8px; height: 8px; border-radius: 99px; background: #4b545d; flex: 0 0 8px; }
+  .dot.on { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
+  .card h2 { font-size: 14px; font-weight: 620; letter-spacing: -0.01em; }
+  .card .meta { font-size: 11px; color: #8b98a5; font-family: 'Geist Mono', ui-monospace, monospace; }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: 10.5px; color: #b9c2cc; padding: 2px 9px; border-radius: 999px;
+         background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); }
+  .bar { height: 4px; border-radius: 99px; background: rgba(255,255,255,.09); overflow: hidden; }
+  .bar > i { display: block; height: 100%; border-radius: 99px;
+             background: linear-gradient(90deg, rgba(255,255,255,.4), var(--accent)); transition: width .3s var(--ease); }
+  .foot { display: flex; align-items: center; gap: 10px; margin-top: auto; }
+  .foot .num { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10.5px; color: #8b98a5; }
+  .foot .sp { flex: 1; }
+  .cbx { appearance: none; width: 17px; height: 17px; flex: 0 0 17px; cursor: pointer; border-radius: 6px;
+    display: grid; place-content: center; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.24); transition: all .14s var(--ease); }
+  .cbx:checked { background: var(--accent); border-color: var(--accent); }
+  .cbx:checked::after { content: '✓'; font-size: 11px; color: #06222f; font-weight: 700; }
+</style>
+</head>
+<body>
+<!-- SVG displacement shader: fractal noise → gaussian smooth → pixel displacement -->
+<svg width="0" height="0" aria-hidden="true" style="position:fixed">
+  <filter id="refract" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.008 0.014" numOctaves="2" seed="11" result="noise"/>
+    <feGaussianBlur in="noise" stdDeviation="1.6" result="smooth"/>
+    <feDisplacementMap in="SourceGraphic" in2="smooth" scale="38" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+  <div class="head">
+    <h1>Portfolio</h1><span class="sub">12 projects · 5 done · refraction demo</span>
+    <span class="sp"></span>
+    <button class="btn">All</button>
+    <button class="btn">Pending</button>
+    <button class="btn primary">+ New</button>
+  </div>
+  <div class="grid">
+    <div class="card glass">
+      <div class="row"><span class="dot on"></span><h2>Hyperliquid</h2><span class="sp"></span><span class="meta">S · 12d</span></div>
+      <div class="tags"><span class="tag">Solana</span><span class="tag">Testnet</span><span class="tag">X</span></div>
+      <div class="bar"><i style="width:72%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox" checked><span class="num">8/11 tasks</span><span class="sp"></span><span class="meta">0.8 SOL</span></div>
+    </div>
+    <div class="card glass">
+      <div class="row"><span class="dot"></span><h2>LayerZero V2</h2><span class="sp"></span><span class="meta">A · 34d</span></div>
+      <div class="tags"><span class="tag">Ethereum</span><span class="tag">Mainnet</span></div>
+      <div class="bar"><i style="width:40%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox"><span class="num">4/10 tasks</span><span class="sp"></span><span class="meta">0.4 ETH</span></div>
+    </div>
+    <div class="card glass">
+      <div class="row"><span class="dot on"></span><h2>Eigenlayer</h2><span class="sp"></span><span class="meta">S · 5d</span></div>
+      <div class="tags"><span class="tag">Ethereum</span><span class="tag">Restaking</span><span class="tag">App</span></div>
+      <div class="bar"><i style="width:100%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox" checked><span class="num">9/9 tasks</span><span class="sp"></span><span class="meta">2.1 ETH</span></div>
+    </div>
+    <div class="card glass">
+      <div class="row"><span class="dot"></span><h2>Berachain</h2><span class="sp"></span><span class="meta">B · 48d</span></div>
+      <div class="tags"><span class="tag">Berachain</span><span class="tag">Testnet</span></div>
+      <div class="bar"><i style="width:15%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox"><span class="num">1/7 tasks</span><span class="sp"></span><span class="meta">—</span></div>
+    </div>
+    <div class="card glass">
+      <div class="row"><span class="dot on"></span><h2>Monad</h2><span class="sp"></span><span class="meta">A · 21d</span></div>
+      <div class="tags"><span class="tag">Monad</span><span class="tag">Testnet</span><span class="tag">Desktop</span></div>
+      <div class="bar"><i style="width:58%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox" checked><span class="num">5/9 tasks</span><span class="sp"></span><span class="meta">0.3 MON</span></div>
+    </div>
+    <div class="card glass">
+      <div class="row"><span class="dot"></span><h2>Celestia</h2><span class="sp"></span><span class="meta">C · 60d</span></div>
+      <div class="tags"><span class="tag">Celestia</span><span class="tag">Light node</span></div>
+      <div class="bar"><i style="width:0%"></i></div>
+      <div class="foot"><input class="cbx" type="checkbox"><span class="num">0/6 tasks</span><span class="sp"></span><span class="meta">—</span></div>
+    </div>
+  </div>
+</body>
+</html>

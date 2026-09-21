@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>A2 · Custom Accent · Fluor Dark</title>
+<style>
+  /* MATERIAL: flat dark + glow + noise dither
+     FONT: General Sans (Fontshare) + Space Mono
+     ICONS: Phosphor fill — solid 256-grid, bulat, friendly */
+  @import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+  :root {
+    --accent:#34d399; --accent-2:rgba(52,211,153,.16);
+    --bg:#0a0c10; --surface:#11151c; --surface-2:#171c25; --line:#222a36;
+    --fg:#e8eef6; --fg-2:#9aa8bd; --fg-3:#5f6c80;
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'General Sans',-apple-system,system-ui,sans-serif; color:var(--fg); background:var(--bg);
+    min-height:100vh; padding:30px 40px 56px; overflow-x:hidden; position:relative; }
+  /* dither noise overlay */
+  body::before { content:''; position:fixed; inset:0; pointer-events:none; z-index:9998; opacity:.045;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23d)'/%3E%3C/svg%3E"); }
+  .ic { width:16px; height:16px; flex:none; }
+  .head { display:flex; align-items:center; gap:15px; margin-bottom:20px; }
+  .head h1 { font-size:22px; font-weight:700; letter-spacing:-.03em; }
+  .head .sub { font-family:'Space Mono',monospace; font-size:10.5px; color:var(--fg-2); }
+  .head .sp { flex:1; }
+  .btn { display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; color:var(--fg-2);
+    background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:8px 14px; cursor:pointer; transition:.2s var(--ease); }
+  .btn:hover { color:var(--fg); border-color:var(--accent); box-shadow:0 0 0 1px var(--accent-2), 0 0 18px -4px var(--accent-2); }
+  .btn.primary { color:#04140d; background:var(--accent); border-color:var(--accent);
+    box-shadow:0 0 24px -6px var(--accent); }
+  .btn.primary:hover { box-shadow:0 0 34px -6px var(--accent); transform:translateY(-1px); }
+  /* accent picker */
+  .accent-row { display:flex; align-items:center; gap:10px; margin-bottom:22px; padding:11px 14px;
+    background:var(--surface); border:1px solid var(--line); border-radius:12px; }
+  .accent-row .lbl { font-family:'Space Mono',monospace; font-size:9.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--fg-3); }
+  .sw { width:26px; height:26px; border-radius:8px; cursor:pointer; transition:.18s var(--ease);
+    border:2px solid transparent; box-shadow:0 0 0 1px var(--line) inset; }
+  .sw:hover { transform:scale(1.14); }
+  .sw.sel { border-color:#fff; box-shadow:0 0 16px -2px currentColor; }
+  .pk { width:34px; height:34px; border-radius:10px; cursor:pointer; padding:0; border:1px solid var(--line);
+    background:conic-gradient(#f87171,#fbbf24,#34d399,#22d3ee,#818cf8,#f472b6,#f87171); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+  .card { position:relative; background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:17px; cursor:pointer; transition:.22s var(--ease); }
+  .card:hover { border-color:color-mix(in srgb, var(--accent) 55%, var(--line));
+    box-shadow:0 0 0 1px var(--accent-2), 0 22px 44px -20px rgba(0,0,0,.9), 0 0 30px -16px var(--accent); transform:translateY(-3px); }
+  .row { display:flex; align-items:center; gap:11px; margin-bottom:12px; }
+  .box { width:22px; height:22px; border-radius:8px; display:grid; place-items:center; flex:none; cursor:pointer;
+    transition:.18s var(--ease); background:var(--surface-2); border:1px solid var(--line); }
+  .box:hover { border-color:var(--accent); }
+  .box.on { background:var(--accent); border-color:var(--accent); box-shadow:0 0 16px -4px var(--accent); }
+  .box svg { width:13px; height:13px; opacity:0; }
+  .box.on svg { opacity:1; }
+  h2 { font-size:16px; font-weight:600; letter-spacing:-.02em; }
+  .sp { flex:1; }
+  .rank { font-family:'Space Mono',monospace; font-size:10px; font-weight:700; letter-spacing:.08em;
+    color:var(--accent); background:var(--accent-2); padding:3px 8px; border-radius:6px; }
+  .tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .tag { font-size:10.5px; font-weight:500; color:var(--fg-2); background:var(--surface-2);
+    border:1px solid var(--line); border-radius:999px; padding:3px 10px; }
+  .bar { height:6px; background:var(--surface-2); border-radius:999px; overflow:hidden; margin-bottom:12px; }
+  .bar i { display:block; height:100%; background:var(--accent); border-radius:999px;
+    box-shadow:0 0 12px var(--accent); transition:width .5s var(--ease); }
+  .foot { display:flex; align-items:center; gap:9px; }
+  .num { font-family:'Space Mono',monospace; font-size:10.5px; color:var(--fg-2); }
+  .menu { position:absolute; top:13px; right:13px; width:30px; height:30px; border-radius:10px; display:grid; place-items:center;
+    color:var(--fg-3); background:var(--surface-2); border:1px solid var(--line); cursor:pointer;
+    opacity:0; transition:.18s var(--ease); }
+  .card:hover .menu { opacity:1; }
+  .menu:hover { color:var(--accent); border-color:var(--accent); }
+  .cal-strip { display:flex; gap:0; margin-bottom:20px; border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--surface); }
+  .cal-strip span { flex:1; height:40px; display:grid; place-items:center; font-family:'Space Mono',monospace;
+    font-size:9.5px; font-weight:700; letter-spacing:.08em; color:var(--fg-3); border-right:1px solid var(--line); }
+  .cal-strip span:last-child { border-right:none; }
+  .cal-strip span.now { color:#04140d; background:var(--accent); }
+</style>
+</head>
+<body>
+  <div class="head">
+    <h1>Portfolio</h1><span class="sub">12 projects · 5 done</span><span class="sp"></span>
+    <button class="btn">All</button><button class="btn">Pending</button>
+    <button class="btn primary" id="btn-new"><svg class="ic" viewBox="0 0 256 256"><path fill="currentColor" d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8"/></svg>New project</button>
+  </div>
+
+  <div class="accent-row">
+    <span class="lbl">Accent</span>
+    <input type="color" class="pk" id="pk" value="#34d399" title="Custom color">
+    <div id="swatches" style="display:flex;gap:8px;"></div>
+  </div>
+
+  <div class="cal-strip" id="days"></div>
+  <div class="grid" id="grid"></div>
+
+<script>
+/* Phosphor fill icons (256 grid) — solid fill, bentuk bulat */
+const ICONS = {
+  check:'<svg class="ic" viewBox="0 0 256 256"><path fill="currentColor" d="M173.66 98.34a8 8 0 0 1 0 11.32l-56 56a8 8 0 0 1-11.32 0l-24-24a8 8 0 0 1 11.32-11.32L112 148.69l50.34-50.35a8 8 0 0 1 11.32 0"/></svg>',
+  more:'<svg class="ic" viewBox="0 0 256 256"><path fill="currentColor" d="M128 60a16 16 0 1 1-16-16a16 16 0 0 1 16 16m0 84a16 16 0 1 1 16-16a16 16 0 0 1-16 16m0 68a16 16 0 1 1-16-16a16 16 0 0 1 16 16"/></svg>',
+};
+const SWATCHES = ['#34d399','#22d3ee','#818cf8','#f472b6','#fbbf24','#f87171','#a3e635','#ffffff'];
+const DATA = [
+  ['Hyperliquid','S',72,8,11,['Solana','Testnet','X'],'on'],
+  ['LayerZero V2','A',40,4,10,['Ethereum','Mainnet'],''],
+  ['Eigenlayer','S',100,9,9,['Ethereum','Restaking','App'],'on'],
+  ['Berachain','B',15,1,7,['Berachain','Testnet'],''],
+  ['Monad','A',58,5,9,['Monad','Desktop'],'on'],
+  ['Celestia','C',0,0,6,['Celestia','Light node'],''],
+];
+const DOW=['SUN','MON','TUE','WED','THU','FRI','SAT']; const now=new Date().getDay();
+document.getElementById('days').innerHTML = DOW.map((d,i)=>`<span class="${i===now?'now':''}">${d}</span>`).join('');
+document.getElementById('swatches').innerHTML = SWATCHES.map(c=>`<span class="sw" data-c="${c}" style="background:${c};color:${c}"></span>`).join('');
+document.getElementById('grid').innerHTML = DATA.map(([n,r,p,d,t,tags,on]) => `
+  <div class="card">
+    <button class="menu" data-act="menu">${ICONS.more}</button>
+    <div class="row">
+      <span class="box ${on}" data-act="toggle">${ICONS.check}</span>
+      <h2>${n}</h2><span class="sp"></span><span class="rank">${r}</span>
+    </div>
+    <div class="tags">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    <div class="bar"><i style="width:${p}%"></i></div>
+    <div class="foot"><span class="num">${d}/${t} tasks</span><span class="sp"></span><span class="num">${p}%</span></div>
+  </div>`).join('');
+
+const root = document.documentElement; const pk = document.getElementById('pk');
+function hexRgb(h){ h=h.replace('#',''); return [0,2,4].map(i=>parseInt(h.substr(i,2),16)); }
+function setAccent(c){
+  root.style.setProperty('--accent', c);
+  const [r,g,b]=hexRgb(c);
+  root.style.setProperty('--accent-2', `rgba(${r},${g},${b},.16)`);
+  pk.value=c;
+  document.querySelectorAll('.sw').forEach(s=>s.classList.toggle('sel', s.dataset.c.toLowerCase()===c.toLowerCase()));
+}
+pk.addEventListener('input', e=>setAccent(e.target.value));
+document.querySelectorAll('.sw').forEach(s=>s.addEventListener('click',()=>setAccent(s.dataset.c)));
+setAccent('#34d399');
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act="toggle"]'); if (b) b.classList.toggle('on');
+});
+</script>
+</body>
+</html>

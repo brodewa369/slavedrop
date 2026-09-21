@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>A1 · Custom Accent · Neumorph</title>
+<style>
+  /* MATERIAL: neumorphism soft-shadow (monochrome base + accent injection)
+     FONT: Inter variable + JetBrains Mono
+     ICONS: Solar bold-duotone — dua-layer fill, beda banget dari stroke sets */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+  :root {
+    /* live di-override oleh JS color picker */
+    --accent:#6366f1; --accent-soft:rgba(99,102,241,.14);
+    --bg:#e8eaf0; --bg-2:#dfe2ea; --surface:#eef0f6;
+    --ink:#252a3a; --ink-2:#5c6378; --ink-3:#8b91a5;
+    --shadow-dark:#c9ccd6; --shadow-light:#ffffff;
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Inter',system-ui,sans-serif; color:var(--ink); background:var(--bg);
+    min-height:100vh; padding:30px 40px 56px; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  .ic { width:16px; height:16px; flex:none; }
+  .head { display:flex; align-items:center; gap:15px; margin-bottom:24px; }
+  .head h1 { font-size:21px; font-weight:700; letter-spacing:-.03em; }
+  .head .sub { font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-2); }
+  .head .sp { flex:1; }
+  /* neumorph button: dual shadow, inset highlight */
+  .btn { display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; color:var(--ink-2);
+    background:var(--surface); border:none; border-radius:12px; padding:9px 15px; cursor:pointer; transition:.2s var(--ease);
+    box-shadow:4px 4px 9px var(--shadow-dark), -4px -4px 9px var(--shadow-light); }
+  .btn:hover { color:var(--ink); box-shadow:6px 6px 12px var(--shadow-dark), -6px -6px 12px var(--shadow-light); }
+  .btn:active, .btn.on { box-shadow:inset 3px 3px 7px var(--shadow-dark), inset -3px -3px 7px var(--shadow-light); }
+  .btn.primary { color:#fff; background:var(--accent); box-shadow:4px 4px 12px var(--accent-soft); }
+  .btn.primary:hover { background:color-mix(in srgb, var(--accent) 88%, #fff); }
+  /* accent picker chip row */
+  .accent-row { display:flex; align-items:center; gap:10px; margin-bottom:22px;
+    background:var(--surface); border-radius:14px; padding:10px 14px;
+    box-shadow:inset 3px 3px 7px var(--shadow-dark), inset -3px -3px 7px var(--shadow-light); }
+  .accent-row .lbl { font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-3); }
+  .sw { width:26px; height:26px; border-radius:9px; cursor:pointer; transition:.18s var(--ease);
+    box-shadow:2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light); border:2px solid transparent; }
+  .sw:hover { transform:scale(1.12); }
+  .sw.sel { border-color:var(--ink); box-shadow:inset 2px 2px 4px rgba(0,0,0,.2); }
+  .pk { width:34px; height:34px; border-radius:10px; cursor:pointer; background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red);
+    box-shadow:2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light); border:2px solid #fff3; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+  .card { position:relative; border-radius:18px; padding:17px; cursor:pointer; transition:.22s var(--ease);
+    background:var(--surface); box-shadow:6px 6px 14px var(--shadow-dark), -6px -6px 14px var(--shadow-light); }
+  .card:hover { box-shadow:8px 8px 18px var(--shadow-dark), -8px -8px 18px var(--shadow-light); transform:translateY(-2px); }
+  .row { display:flex; align-items:center; gap:11px; margin-bottom:12px; }
+  .box { width:22px; height:22px; border-radius:8px; display:grid; place-items:center; flex:none; cursor:pointer; transition:.18s var(--ease);
+    background:var(--bg-2); box-shadow:inset 2px 2px 4px var(--shadow-dark), inset -2px -2px 4px var(--shadow-light); }
+  .box.on { background:var(--accent); box-shadow:2px 2px 5px var(--shadow-dark), -2px -2px 5px var(--shadow-light); }
+  .box svg { width:13px; height:13px; opacity:0; transition:.15s; }
+  .box.on svg { opacity:1; }
+  h2 { font-size:15.5px; font-weight:600; letter-spacing:-.015em; }
+  .sp { flex:1; }
+  .rank { font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600; letter-spacing:.08em;
+    color:var(--accent); background:var(--accent-soft); padding:3px 8px; border-radius:6px; }
+  .tags { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .tag { font-size:10.5px; font-weight:500; color:var(--ink-2); background:var(--bg-2);
+    border-radius:999px; padding:3px 10px; box-shadow:inset 1.5px 1.5px 3px var(--shadow-dark), inset -1.5px -1.5px 3px var(--shadow-light); }
+  .bar { height:8px; border-radius:999px; overflow:hidden; margin-bottom:12px;
+    background:var(--bg-2); box-shadow:inset 2px 2px 4px var(--shadow-dark), inset -2px -2px 4px var(--shadow-light); }
+  .bar i { display:block; height:100%; background:var(--accent); border-radius:999px;
+    box-shadow:0 0 8px var(--accent-soft); transition:width .5s var(--ease); }
+  .foot { display:flex; align-items:center; gap:9px; }
+  .num { font-family:'JetBrains Mono',monospace; font-size:10.5px; color:var(--ink-2); }
+  .menu { position:absolute; top:13px; right:13px; width:30px; height:30px; border-radius:10px; display:grid; place-items:center;
+    color:var(--ink-3); background:var(--surface); cursor:pointer; border:none;
+    box-shadow:3px 3px 6px var(--shadow-dark), -3px -3px 6px var(--shadow-light); opacity:0; transition:.18s var(--ease); }
+  .card:hover .menu { opacity:1; }
+  .menu:hover { color:var(--accent); }
+  .day-strip { display:flex; gap:4px; margin-bottom:18px; }
+  .day-strip span { flex:1; height:30px; display:grid; place-items:center; font-family:'JetBrains Mono',monospace;
+    font-size:9.5px; font-weight:600; letter-spacing:.06em; color:var(--ink-3); border-radius:8px;
+    background:var(--surface); box-shadow:inset 2px 2px 4px var(--shadow-dark), inset -2px -2px 4px var(--shadow-light); }
+  .day-strip span.now { color:#fff; background:var(--accent); box-shadow:none; }
+</style>
+</head>
+<body>
+  <div class="head">
+    <h1>Portfolio</h1><span class="sub">12 projects · 5 done</span><span class="sp"></span>
+    <button class="btn" data-f="all">All</button><button class="btn" data-f="pend">Pending</button>
+    <button class="btn primary"><svg class="ic" viewBox="0 0 24 24"><path fill="currentColor" d="M12 5v14M5 12h14"/></svg>New project</button>
+  </div>
+
+  <div class="accent-row">
+    <span class="lbl">Accent</span>
+    <input type="color" class="pk" id="pk" value="#6366f1" title="Custom color">
+    <div id="swatches" style="display:flex;gap:8px;"></div>
+  </div>
+
+  <div class="day-strip" id="days"></div>
+  <div class="grid" id="grid"></div>
+
+<script>
+/* Solar bold-duotone icons — fill dua layer (bukan stroke) */
+const ICONS = {
+  check:'<svg class="ic" viewBox="0 0 24 24"><path fill="currentColor" opacity=".35" d="M12 2c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12S6.5 2 12 2"/><path fill="currentColor" d="m8.5 12.5l2.5 2.5l5-5.5l-1.3-1.2l-3.7 4.1l-1.2-1.2z"/></svg>',
+  more:'<svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.7" fill="currentColor"/><circle cx="12" cy="12" r="1.7" fill="currentColor"/><circle cx="12" cy="19" r="1.7" fill="currentColor"/></svg>',
+  plus:'<svg class="ic" viewBox="0 0 24 24"><path fill="currentColor" opacity=".35" d="M12 2c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12S6.5 2 12 2"/><path fill="currentColor" d="M11 7v4H7v2h4v4h2v-4h4v-2h-4V7z"/></svg>',
+};
+const SWATCHES = ['#6366f1','#0ea5e9','#10b981','#f59e0b','#ef4444','#ec4899','#8b5cf6','#141414'];
+const DATA = [
+  ['Hyperliquid','S',72,8,11,['Solana','Testnet','X'],'on'],
+  ['LayerZero V2','A',40,4,10,['Ethereum','Mainnet'],''],
+  ['Eigenlayer','S',100,9,9,['Ethereum','Restaking','App'],'on'],
+  ['Berachain','B',15,1,7,['Berachain','Testnet'],''],
+  ['Monad','A',58,5,9,['Monad','Desktop'],'on'],
+  ['Celestia','C',0,0,6,['Celestia','Light node'],''],
+];
+const DOW=['SUN','MON','TUE','WED','THU','FRI','SAT']; const now=new Date().getDay();
+document.getElementById('days').innerHTML = DOW.map((d,i)=>`<span class="${i===now?'now':''}">${d}</span>`).join('');
+document.getElementById('swatches').innerHTML = SWATCHES.map(c=>`<span class="sw" data-c="${c}" style="background:${c}"></span>`).join('');
+document.getElementById('grid').innerHTML = DATA.map(([n,r,p,d,t,tags,on]) => `
+  <div class="card">
+    <button class="menu" data-act="menu">${ICONS.more}</button>
+    <div class="row">
+      <span class="box ${on}" data-act="toggle">${ICONS.check}</span>
+      <h2>${n}</h2><span class="sp"></span><span class="rank">${r}</span>
+    </div>
+    <div class="tags">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    <div class="bar"><i style="width:${p}%"></i></div>
+    <div class="foot"><span class="num">${d}/${t} tasks</span><span class="sp"></span><span class="num">${p}%</span></div>
+  </div>`).join('');
+
+const root = document.documentElement;
+const pk = document.getElementById('pk');
+function setAccent(c){
+  root.style.setProperty('--accent', c);
+  root.style.setProperty('--accent-soft', c+'22');
+  pk.value = c;
+  document.querySelectorAll('.sw').forEach(s=>s.classList.toggle('sel', s.dataset.c.toLowerCase()===c.toLowerCase()));
+}
+pk.addEventListener('input', e=>setAccent(e.target.value));
+document.querySelectorAll('.sw').forEach(s=>s.addEventListener('click',()=>setAccent(s.dataset.c)));
+setAccent('#6366f1');
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act="toggle"]'); if (b) b.classList.toggle('on');
+});
+</script>
+</body>
+</html>
