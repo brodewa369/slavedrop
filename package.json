@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Minimalist local airdrop farming tracker — your data never leaves your machine",
   "main": "main.js",
-  "author": "brodewa",
+  "author": {
+    "name": "brodewa",
+    "email": "brodewa@duit.cc"
+  },
   "license": "MIT",
   "homepage": "https://github.com/brodewa369/slavedrop",
   "repository": {
@@ -21,11 +24,11 @@
   },
   "dependencies": {
     "@phosphor-icons/web": "^2.1.2",
-    "better-sqlite3": "^13.0.3",
-    "electron": "^44.4.3"
+    "better-sqlite3": "^13.0.3"
   },
   "devDependencies": {
-    "electron-builder": "^26.15.3"
+    "electron": "^44.4.3",
+    "electron-builder": "^26.0.0"
   },
   "build": {
     "appId": "com.brodewa.slavedrop",
@@ -40,6 +43,7 @@
       "package.json",
       "src/**/*",
       "fonts/**/*",
+      "build/icon.png",
       "!**/*.bak*",
       "!**/mockups/**"
     ],
@@ -70,12 +74,7 @@
       "target": [
         "AppImage",
         "deb"
-      ],
-      "desktop": {
-        "Name": "SlaveDrop",
-        "Comment": "Local airdrop farming tracker",
-        "Categories": "Office;Finance;"
-      }
+      ]
     },
     "publish": {
       "provider": "github",
