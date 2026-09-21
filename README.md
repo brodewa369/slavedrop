@@ -43,7 +43,7 @@ chmod +x SlaveDrop-1.0.0-linux-x86_64.AppImage
 
 If your distro blocks AppImages, use the `.deb` instead (or run it through [AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher)).
 
-**Windows and macOS** — sorry, no prebuilt builds. The maintainer only runs Linux, so those installers aren't produced here. **Building from source is easy and takes about two minutes** — see below. It's the same app, just packaged on your own machine.
+**Windows and macOS** — sorry, no prebuilt builds. The maintainer only runs Linux, so those installers aren't produced here. **Building from source takes about two minutes** — just `git clone`, `npm install`, `npm start`. See [Build from source](#-build-from-source).
 
 Your data lives at:
 
@@ -59,16 +59,10 @@ Needs [Node.js](https://nodejs.org) 18+ and Git.
 git clone https://github.com/brodewa369/slavedrop.git
 cd slavedrop
 npm install
-npm start          # run it
+npm start
 ```
 
-Package an installer for your own OS (Windows → `.exe`, macOS → `.dmg`, Linux → AppImage/`.deb`):
-
-```bash
-npm run dist
-```
-
-That's it — Electron packages for whatever platform you're running on. Note that Electron cannot cross-build: to get a Windows `.exe`, run the build on Windows, and so on.
+That's it — the app opens.
 
 ## ✦ Features
 
