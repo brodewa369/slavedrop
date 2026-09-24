@@ -9,8 +9,11 @@ full-screen drawers).
 
 | APK | Use it for |
 |---|---|
-| [`releases/SlaveDrop-android-1.0-debug.apk`](./releases/SlaveDrop-android-1.0-debug.apk) | Daily testing — installs over any previous debug build |
-| [`releases/SlaveDrop-android-1.0-release.apk`](./releases/SlaveDrop-android-1.0-release.apk) | Normal use — non-debuggable, same signing key as debug (they upgrade each other, no data loss) |
+| [`releases/SlaveDrop-android-1.0.0-debug.apk`](./releases/SlaveDrop-android-1.0.0-debug.apk) | Daily testing — installs over any previous debug build |
+| [`releases/SlaveDrop-android-1.0.0-release.apk`](./releases/SlaveDrop-android-1.0.0-release.apk) | Normal use — non-debuggable, same signing key as debug (they upgrade each other, no data loss) |
+
+GitHub Releases mirror the same APKs under tag
+[`android-v1.0.0`](../../releases/tag/android-v1.0.0).
 
 Enable *Install unknown apps* for your file manager/browser, then open the APK.
 
