@@ -1,6 +1,6 @@
 [package]
 name = "slavedrop"
-version = "1.0.0"
+version = "2.0.0"
 description = "Minimalist local airdrop farming tracker — your data never leaves your machine"
 authors = ["brodewa <brodewa@duit.cc>"]
 license = "MIT"
