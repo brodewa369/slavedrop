@@ -43,7 +43,7 @@
     id: {
       appSubtitle: 'Saya berjanji akan rajin garap erdrop lagi.',
       search: 'Cari project, wallet, task',
-      showPending: 'Tampilkan yang belum selesai',
+      showPending: 'Tampilkan pending',
       todayLabel: '{v}',
       newProject: 'Project baru', editProject: 'Edit project',
       allNetworks: 'Semua network', allCategories: 'Semua kategori', allRanks: 'Semua rank',

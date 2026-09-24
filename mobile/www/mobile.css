@@ -243,17 +243,21 @@ html[data-theme='dark']  .brand .logo img { content: url('fonts/logo-dark.png') 
 }
 .row-filters .dd-wrap { height: 28px !important; display: flex !important; align-items: center !important; flex: 0 0 auto !important; }
 
-/* Row 3: search + controls */
+/* Row 3: search + controls
+   nowrap is load-bearing: the compact toggle and #btn-add are the LAST items,
+   so any wrap drops them to a second row — which is exactly what happened when
+   a skin font or a longer locale label widened the row. The search box absorbs
+   the slack (flex 1 1 auto, min-width 60) so every child stays on ONE line. */
 .row-controls {
   display: flex !important;
   flex-direction: row !important;
-  flex-wrap: wrap !important;
+  flex-wrap: nowrap !important;
   gap: 6px !important;
   padding: 0 10px 8px !important;
   align-items: center !important;
 }
 .row-controls > * { flex: 0 0 auto !important; }
-.row-controls .search { height: 28px !important; flex: 1 1 auto !important; min-width: 80px !important; max-width: 140px !important; }
+.row-controls .search { height: 28px !important; flex: 1 1 auto !important; min-width: 60px !important; max-width: 140px !important; }
 .row-controls .search input { height: 28px !important; font-size: 11px !important; padding: 0 28px 0 28px !important; }
 .row-controls .chip {
   height: 28px !important; font-size: 11px !important;
