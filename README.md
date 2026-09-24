@@ -34,6 +34,8 @@
 </tr>
 </table>
 
+<img src="screenshots/shot-08.png" width="860" alt="SlaveDrop — additional view">
+
 ## ✦ Why SlaveDrop
 
 - **One dashboard for every farm.** Every project, its rank, status, chains, wallets, and tasks — in one window instead of scattered across tabs and notes.
