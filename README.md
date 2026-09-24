@@ -5,7 +5,7 @@
 
 **Local-first airdrop farming tracker.** Everything is stored on your machine — nothing leaves it.
 
-[Install](#-install) · [Features](#-features) · [Screenshots](#-screenshots) · [Build](#-build-from-source) · [Your data](#-your-data) · [Support](#-support-the-project)
+[Install](#-install) · [Features](#-features) · [Screenshots](#-screenshots) · [Android](./mobile/) · [Build](#-build-from-source) · [Your data](#-your-data) · [Support the project](#-support-the-project)
 
 </div>
 
@@ -14,6 +14,8 @@
 **SlaveDrop** is a desktop app for airdrop farmers. It tracks every project you're farming — ranks, statuses, deadlines, the wallets and accounts you use for each, and your daily progress — in one place, on your own computer. No accounts, no servers, no telemetry. Just a single SQLite file you fully control.
 
 > **v2 — now built with [Tauri](https://tauri.app).** Same UI, same data format, same zero-network guarantee, but the Electron runtime is gone: the app is one ~7 MB Rust binary using the system webview. The previous Electron implementation is preserved on the [`electron` branch](../../tree/electron).
+
+> **📲 Android** — the mobile build ships in this repo too: source in [`mobile/`](./mobile/), ready-to-install APKs in [`mobile/releases/`](./mobile/releases/) — `debug` for daily testing, `release` for normal use (same signing key, so one upgrades the other without losing data). Desktop targets Linux, macOS and Windows via Tauri; Android 5.0+ via a WebView shell.
 
 ## ✦ Screenshots
 

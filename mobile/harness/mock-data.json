@@ -1,0 +1,145 @@
+{
+  "config": {
+    "categories": "[\"Testnet\",\"Mainnet\",\"Node\",\"DeFi\",\"Social\",\"Waitlist\",\"AI\",\"Telegram Bot\",\"Daily Checkin\",\"Memecoin\",\"NFT\",\"Retrodrop\"]",
+    "networks": "[\"Ethereum\",\"Solana\",\"Arbitrum\",\"Optimism\",\"Base\",\"BSC\",\"Polygon\",\"Avalanche\",\"Sui\",\"Aptos\",\"Bitcoin\",\"Cosmos\"]",
+    "walletLabels": "[\"MetaMask\",\"Phantom\",\"Rabby\",\"Keplr\",\"OKX\",\"Binance\"]",
+    "ranks": "[\"S\",\"A\",\"B\",\"C\",\"D\"]",
+    "statuses": "[\"Ongoing\",\"TGE\",\"Completed\",\"Eligible\",\"Ineligible\"]",
+    "platforms": "[\"X\",\"Desktop\",\"App\",\"Extension\",\"Web\"]",
+    "walletApps": "[\"MetaMask\",\"OKX Wallet\",\"Phantom\",\"Rabby\",\"Keplr\",\"Binance\"]",
+    "theme": "dark",
+    "locale": "en",
+    "skin": "base",
+    "bgPreset": "custom",
+    "bgCustom": "/home/dxwx/.config/slavedrop/icons/bg-1789977416612.jpg"
+  },
+  "projects": [
+    {
+      "id": 1,
+      "name": "test 1",
+      "website": "test.com",
+      "x_account": "test",
+      "category": "[\"Testnet\",\"Daily Checkin\"]",
+      "network": "[\"Ethereum\"]",
+      "note": "test 1",
+      "icon": "/home/dxwx/.config/slavedrop/icons/icon-1789976911485.png",
+      "done": 0,
+      "archived": 0,
+      "rank": "S",
+      "cost": "Free",
+      "chains": "[]",
+      "status": "Ongoing",
+      "platform": "[\"Web\"]",
+      "wallet_app": "OKX Wallet",
+      "created_at": "2026-09-21 07:51:45",
+      "updated_at": "2026-09-21T08:23:22.046Z",
+      "links": [
+        {
+          "url": "test.com",
+          "label": "bridge"
+        },
+        {
+          "url": "test.com",
+          "label": "swap"
+        },
+        {
+          "url": "test.com",
+          "label": "lend"
+        }
+      ],
+      "wallets": [
+        {
+          "address": "0x1",
+          "label": "wallet 1"
+        },
+        {
+          "address": "0x2",
+          "label": "wallet 2"
+        },
+        {
+          "address": "0x3",
+          "label": "wallet 3"
+        }
+      ],
+      "x": [
+        {
+          "username": "jokowi"
+        },
+        {
+          "username": "prabowo"
+        },
+        {
+          "username": "teddy"
+        }
+      ],
+      "mail": [
+        {
+          "email": "jokowi@gmail.com"
+        },
+        {
+          "email": "prabowo@gmail.com"
+        },
+        {
+          "email": "teddy@gmail.com"
+        }
+      ],
+      "tasks": [
+        {
+          "id": 1,
+          "text": "swap",
+          "deadline": "",
+          "done": 0,
+          "url": "swap.com"
+        },
+        {
+          "id": 2,
+          "text": "daily task",
+          "deadline": "",
+          "done": 0,
+          "url": "daily.com"
+        },
+        {
+          "id": 3,
+          "text": "deploy",
+          "deadline": "2026-09-23",
+          "done": 0,
+          "url": "deploy.com"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "test 2",
+      "website": "test.com",
+      "x_account": "testtt",
+      "category": "[\"Waitlist\"]",
+      "network": "[\"Ethereum\"]",
+      "note": "",
+      "icon": null,
+      "done": 0,
+      "archived": 0,
+      "rank": "B",
+      "cost": "Free",
+      "chains": "[]",
+      "status": "Ongoing",
+      "platform": "[\"Web\"]",
+      "wallet_app": "OKX Wallet",
+      "created_at": "2026-09-21 07:53:34",
+      "updated_at": "2026-09-21T07:53:34.351Z",
+      "links": [
+        {
+          "url": "website.com",
+          "label": "web"
+        }
+      ],
+      "wallets": [],
+      "x": [],
+      "mail": [
+        {
+          "email": "email@@gmail.com"
+        }
+      ],
+      "tasks": []
+    }
+  ]
+}

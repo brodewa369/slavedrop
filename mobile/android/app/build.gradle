@@ -1,0 +1,17 @@
+apply plugin: 'com.android.application'
+android {
+    compileSdk 33
+    namespace "com.slavedrop.app"
+    defaultConfig {
+        applicationId "com.slavedrop.app"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release { minifyEnabled false }
+        debug { minifyEnabled false }
+    }
+}
+dependencies { implementation 'androidx.appcompat:appcompat:1.6.1' }

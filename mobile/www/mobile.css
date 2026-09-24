@@ -1,0 +1,513 @@
+/* mobile.css — SlaveDrop mobile overrides.
+   Loaded without media query (always applied in mobile harness).
+   Desktop style.css is untouched; this is an additive override layer. */
+
+:root {
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html, body, #app { height: 100%; }
+#app { height: 100dvh; height: 100svh; overflow: hidden; padding-top: var(--safe-top); }
+.view { flex: 1 1 0; min-height: 0; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+
+#refract [class*='aurora'] { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+
+/* ============================================================
+   1. HEADER — compact, logo BOTH themes, tagline visible
+   ============================================================ */
+.header {
+  height: 52px !important;
+  padding: 0 10px !important;
+  gap: 8px !important;
+}
+.brand { gap: 8px !important; align-items: center !important; }
+.brand .logo {
+  width: 28px !important; height: 28px !important;
+  border-radius: 8px !important;
+  display: grid !important;
+  flex: 0 0 28px !important;
+  overflow: hidden !important;
+  background: transparent !important;
+}
+.brand .logo img {
+  width: 100% !important; height: 100% !important;
+  object-fit: contain !important; display: block !important;
+}
+html[data-theme='light'] .brand .logo img { content: url('fonts/logo-light.png') !important; src: url('fonts/logo-light.png') !important; }
+html[data-theme='dark']  .brand .logo img { content: url('fonts/logo-dark.png') !important; src: url('fonts/logo-dark.png') !important; }
+.brand h1 { font-size: 15px !important; font-weight: 650 !important; line-height: 1.1 !important; }
+.brand p { display: block !important; font-size: 10.5px !important; color: var(--fg-3) !important; line-height: 1 !important; }
+.btn-icon, .menu-wrap { width: 36px !important; height: 36px !important; min-width: 36px !important; min-height: 36px !important; }
+
+/* ============================================================
+   2. CALENDAR — collapsed by default on mobile (compact strip)
+   ============================================================ */
+.cal-strip {
+  margin: 6px 10px 0 !important;
+  padding: 6px 10px !important;
+  border-radius: 10px !important;
+  font-size: 12px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+.cal-strip .cal-head {
+  margin-bottom: 0 !important;
+  gap: 14px !important;
+  align-items: center !important;
+}
+.cal-strip .cal-title {
+  min-width: 0 !important; flex: 1 !important; text-align: center !important;
+  font-size: 12px !important;
+}
+
+.cal-strip.collapsed .cal-grid-wrap { display: none !important; }
+.cal-strip.collapsed .cal-list { display: none !important; }
+.cal-strip:not(.collapsed) .cal-grid-wrap { display: block !important; margin-top: 6px !important; }
+.cal-strip:not(.collapsed) .cal-list { display: flex !important; margin-top: 4px !important; flex-wrap: wrap !important; gap: 4px !important; }
+/* Calendar header: single row, date pill abbreviated */
+.cal-head { 
+  overflow: visible !important; 
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+  padding-right: 0 !important;
+}
+#cal-today {
+  margin-left: auto !important;
+  white-space: nowrap !important;
+  width: fit-content !important;
+  min-width: fit-content !important;
+  max-width: 45% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  flex-shrink: 0 !important;
+  font-size: 11px !important;
+  order: 5 !important;
+}
+/* Move calendar toggle to right after date pill */
+#cal-toggle {
+  order: 6 !important;
+  margin-left: 0 !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Nav arrows — force perfect vertical center */
+#cal-prev, #cal-next {
+  height: 28px !important;
+  width: 28px !important;
+  min-height: 28px !important;
+  min-width: 28px !important;
+  max-height: 28px !important;
+  max-width: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  line-height: 28px !important;
+  font-size: 13px !important;
+  position: relative !important;
+}
+#cal-prev i, #cal-next i {
+  font-size: 13px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 13px !important;
+  display: block !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+/* Title — force same height and center */
+.cal-title { 
+  min-width: 0 !important; 
+  flex: 1 1 auto !important;
+  font-size: 13px !important;
+  white-space: nowrap !important;
+  max-width: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  line-height: 28px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+}
+.cal-head .spacer { display: none !important; }
+.cal-grid-wrap { overflow: hidden !important; }
+
+/* Calendar task dots + clickable days */
+.cal-cell { position: relative; cursor: pointer; }
+.cal-cell.has-tasks { cursor: pointer; }
+.cal-cell.has-tasks:hover { border-color: var(--accent, #5b8def); }
+.task-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  margin-top: 2px;
+  position: absolute;
+  bottom: 3px; left: 50%; transform: translateX(-50%);
+}
+.task-dot.pending { background: #f5a623; }
+.task-dot.done { background: #2ecc71; }
+.task-dot.mix { background: linear-gradient(90deg, #f5a623 50%, #2ecc71 50%); }
+.cal-cell.selected {
+  border-color: var(--accent, #5b8def) !important;
+  box-shadow: 0 0 0 1px var(--accent, #5b8def);
+}
+
+/* Day detail expandable section */
+#cal-day-detail {
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: var(--bg-2, #1a1d23);
+  border-radius: 8px;
+  border: 1px solid var(--line-soft, rgba(255,255,255,0.08));
+}
+#cal-day-detail h4 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg-2);
+}
+#cal-day-detail .day-detail .dl-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line-soft, rgba(255,255,255,0.06));
+  font-size: 12px;
+}
+#cal-day-detail .day-detail .dl-row:last-child { border-bottom: none; }
+#cal-day-detail .day-detail .dl-row.done { opacity: 0.55; }
+#cal-day-detail .day-detail .dl-row .who { color: var(--fg-3); min-width: 70px; flex: 0 0 auto; }
+#cal-day-detail .day-detail .dl-row .what { color: var(--fg-1); flex: 1; }
+#cal-day-detail .day-detail .dl-row.done .what { text-decoration: line-through; }
+
+/* ============================================================
+   3. TOOLBAR — 2-row layout
+   ============================================================ */
+.toolbar {
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  padding: 6px 10px 8px !important;
+  align-items: center !important;
+}
+.toolbar .spacer { display: none !important; }
+
+/* Row 1: Daily progress */
+.toolbar .daily { flex: 1 1 100% !important; order: 0 !important; font-size: 11px !important; }
+.toolbar .daily .bar { flex: 1 !important; height: 6px !important; }
+.toolbar .d-label, .toolbar .d-counts, .toolbar .d-pct { font-size: 11px !important; }
+
+/* Row 2: filter chips — ONE line (round-4), compact font/icons so
+   all networks / all ranks / all categories fit 390px with margin,
+   overflow-x hidden so nothing can pan sideways */
+.row-filters {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 4px !important;
+  padding: 0 8px 8px !important;
+  overflow-x: hidden !important;
+  align-items: center !important;
+  max-width: 100% !important;
+}
+.row-filters > * { flex: 0 0 auto !important; min-width: auto !important; }
+.row-filters::-webkit-scrollbar { display: none !important; }
+.row-filters { -ms-overflow-style: none !important; scrollbar-width: none !important; }
+
+/* Filter buttons — font + icons shrunk (round-4) to keep one line on 390px */
+.row-filters .chip, .row-filters .dd {
+  height: 28px !important; font-size: 10px !important;
+  padding: 0 7px !important; white-space: nowrap !important;
+  display: inline-flex !important; align-items: center !important; gap: 3px !important;
+  flex: 0 0 auto !important;
+}
+.row-filters .chip i.ph, .row-filters .chip svg.si,
+.row-filters .dd i.ph, .row-filters .dd svg.si {
+  width: 11px !important; height: 11px !important;
+  font-size: 11px !important; flex: none !important;
+}
+.row-filters .dd-wrap { height: 28px !important; display: flex !important; align-items: center !important; flex: 0 0 auto !important; }
+
+/* Row 3: search + controls */
+.row-controls {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  padding: 0 10px 8px !important;
+  align-items: center !important;
+}
+.row-controls > * { flex: 0 0 auto !important; }
+.row-controls .search { height: 28px !important; flex: 1 1 auto !important; min-width: 80px !important; max-width: 140px !important; }
+.row-controls .search input { height: 28px !important; font-size: 11px !important; padding: 0 28px 0 28px !important; }
+.row-controls .chip {
+  height: 28px !important; font-size: 11px !important;
+  padding: 0 10px !important; white-space: nowrap !important;
+  display: inline-flex !important; align-items: center !important;
+}
+.row-controls .chip-icon, .row-controls .btn-icon,
+.row-controls #filter-compact, .row-controls #btn-add {
+  height: 28px !important; width: 28px !important; min-width: 28px !important; padding: 0 !important;
+  display: flex !important; align-items: center !important; justify-content: center !important;
+}
+.row-controls .btn-primary i { font-size: 14px !important; }
+.row-controls .chip-icon i { font-size: 14px !important; }
+
+/* ============================================================
+   4. DROPDOWN POPOVER — visible, centered, tappable
+   ============================================================ */
+.dd-pop[hidden] { display: none !important; }
+.dd-pop {
+  position: fixed !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 100 !important;
+  min-width: 200px !important;
+  max-width: 320px !important;
+  max-height: 60vh !important;
+  overflow-y: auto !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
+}
+.dd-item { height: 36px !important; font-size: 12px !important; }
+.dd-item .n { font-size: 10px !important; }
+
+/* ============================================================
+   5. PROJECT CARDS — clean single-column, readable
+   ============================================================ */
+.grid { grid-template-columns: 1fr !important; gap: 8px !important; }
+.view { padding: 6px 10px 64px !important; }
+
+.card {
+  padding: 8px 10px !important;
+  gap: 4px !important;
+  border-radius: 10px !important;
+}
+/* normal-mode card: project name vertically centered against the 34px icon —
+   base style.css had align-items: flex-start, so the title hugged the top */
+.card-top { align-items: center !important; }
+.card-title { font-size: 13.5px !important; font-weight: 600 !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
+.card-ident { font-size: 11px !important; gap: 4px !important; flex-wrap: wrap !important; }
+.card-ident .k { font-size: 10px !important; }
+.card-meta { font-size: 11px !important; gap: 4px !important; flex-wrap: wrap !important; }
+.card-meta .tag { font-size: 10px !important; height: 18px !important; padding: 0 5px !important; white-space: nowrap !important; }
+.card-links { font-size: 10.5px !important; gap: 4px !important; flex-wrap: wrap !important; }
+.link-btn { font-size: 10.5px !important; min-height: 28px !important; }
+.card-tasks { font-size: 11px !important; }
+.task-row { min-height: 36px !important; gap: 12px !important; align-items: center !important; padding: 8px 0 !important; border-bottom: 1px solid var(--line-soft) !important; }
+.task-row .cbx { margin-right: 0 !important; }
+.task-row span { line-height: 1.3 !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
+.cbx { width: 18px !important; height: 18px !important; padding: 6px !important; margin: -6px !important; flex: 0 0 auto !important; }
+.card-foot { font-size: 11px !important; }
+/* Detail: bigger gap for Marked Done checkbox */
+#detail label:has(> #d-done) { gap: 12px !important; font-size: 12px !important; }
+.btn-sm { height: 28px !important; font-size: 11px !important; }
+
+/* Wallets/Identities rows in detail — consistent spacing */
+.ident-row { display: flex !important; align-items: center !important; gap: 8px !important; padding: 4px 0 !important; }
+.ident-row .k { min-width: 56px !important; font-size: 11px !important; color: var(--fg-3) !important; flex: 0 0 auto !important; }
+.ident-row .v { font-size: 11px !important; flex: 1 !important; min-width: 0 !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
+
+/* compact mode — single line: icon + title + task count */
+.grid.compact .card {
+  padding: 6px 10px !important;
+  gap: 6px !important;
+  flex-direction: row !important;
+  align-items: center !important;
+}
+.grid.compact .card .card-top {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+}
+.grid.compact .card .card-title {
+  font-size: 12px !important;
+  flex: 1 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+}
+.grid.compact .card .card-menu { display: none !important; }
+.grid.compact .card .card-meta { display: none !important; }
+.grid.compact .card .card-tasks { display: none !important; }
+.grid.compact .card .card-links { display: none !important; }
+.grid.compact .card .card-ident { display: none !important; }
+.grid.compact .card .card-foot {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  flex: 0 0 auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.grid.compact .card .card-foot .spacer { display: none !important; }
+/* compact checkbox sits AFTER the progress line, right of the 0/3 count */
+.grid.compact .card .card-foot .cbx-daily {
+  display: inline-flex !important;
+  order: 3 !important;
+  margin: 0 !important;
+}
+.grid.compact .card .card-foot .cbx-daily input.cbx {
+  width: 14px !important;
+  height: 14px !important;
+}
+.grid.compact .card .card-foot .task-count {
+  order: 1 !important;
+  font-size: 10px !important;
+  color: var(--fg-3) !important;
+  white-space: nowrap !important;
+}
+.grid.compact .card .card-foot .mini-bar {
+  order: 2 !important;
+  width: 40px !important;
+  height: 4px !important;
+}
+
+/* ============================================================
+   DRAWER + DETAIL — full-bleed slide-in
+   ============================================================ */
+.drawer {
+  left: 0 !important; top: 0 !important; bottom: 0 !important; right: 0 !important;
+  width: 100vw !important; max-width: 100vw !important; height: 100dvh !important; max-height: 100dvh !important;
+  margin: 0 !important; border-radius: 0 !important;
+  transform: translateX(-100%) !important; opacity: 0 !important;
+  transition: transform .26s var(--ease), opacity .18s var(--ease) !important;
+}
+.drawer.on { transform: translateX(0) !important; opacity: 1 !important; pointer-events: auto !important; }
+
+.detail {
+  left: 0 !important; top: 0 !important; bottom: 0 !important; right: 0 !important;
+  width: 100vw !important; max-width: 100vw !important; height: 100dvh !important; max-height: 100dvh !important;
+  margin: 0 !important; border-radius: 0 !important;
+  transform: translateX(-100%) !important; opacity: 0 !important;
+  transition: transform .26s var(--ease), opacity .18s var(--ease) !important;
+}
+.detail.on { transform: translateX(0) !important; opacity: 1 !important; pointer-events: auto !important; }
+
+/* ============================================================
+   Round 6 — hold-to-delete tags (no corner ✕), hold menu
+   ============================================================ */
+
+/* corner ✕ removed by user request: too easy to mis-tap.
+   Deletion now happens via long-press on the tag (see mobile.js). */
+.chip-x, .chip-wrap:hover .chip-x { display: none !important; }
+
+.hold-menu {
+  position: fixed; z-index: 130;
+  min-width: 168px; max-width: calc(100vw - 16px);
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: 10px; box-shadow: var(--shadow-pop);
+  overflow: hidden; padding: 4px;
+  display: flex; flex-direction: column;
+}
+.hold-item {
+  appearance: none; background: transparent; border: 0;
+  text-align: left; cursor: pointer;
+  padding: 11px 13px; font-size: 13px; color: var(--fg);
+  border-radius: 7px; white-space: nowrap;
+}
+.hold-item:active { background: var(--bg-3); }
+.hold-item.danger { color: var(--danger, #f87171); font-weight: 600; }
+.hold-item.cancel { color: var(--fg-3); }
+
+/* ============================================================
+   Round 5 — filter chips fill one line evenly, browser chooser
+   ============================================================ */
+
+/* the three dd chips stretch to share the row: no leftover space on either
+   side, only proportional gaps between them (round-5 user feedback) */
+.row-filters .dd-wrap { flex: 1 1 0 !important; }
+.row-filters .dd-wrap .chip, .row-filters .dd-wrap .dd {
+  width: 100% !important;
+  justify-content: center !important;
+}
+
+/* ============================================================
+   Round 4 — drawer footer buttons, filter chips, tag hover
+   ============================================================ */
+
+/* drawer foot (Delete / Cancel / Save) was desktop-sized: at 390px the three
+   buttons + gaps overflowed ~10px, cutting the Save button at the screen edge */
+.drawer-foot {
+  padding: 10px 12px !important;
+  gap: 6px !important;
+  flex-wrap: wrap !important;
+}
+.drawer-foot .btn {
+  height: 34px !important;
+  padding: 0 10px !important;
+  font-size: 12px !important;
+  gap: 5px !important;
+  min-width: 0 !important;
+  flex: 0 1 auto !important;
+}
+.drawer-foot .btn i.ph, .drawer-foot .btn svg.si {
+  width: 14px !important; height: 14px !important;
+  font-size: 14px !important; flex: none !important;
+}
+
+/* ============================================================
+   Round 3 — horizontal pan, deadline badge, touch hover
+   ============================================================ */
+
+/* overflow-y:auto implies overflow-x:auto in CSS — that's what let the
+   deadline area (drawer body) and the card view pan sideways under a swipe. */
+.view, .drawer-body, .detail .drawer-body, .card, #grid { overflow-x: hidden !important; }
+
+/* deadline badge on cards: icon was inheriting the 15px svg.si default and
+   the mono date text read too large next to it */
+.dl-badge {
+  font-size: 9.5px !important;
+  gap: 3px !important;
+  padding: 0 4px !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+.dl-badge i.ph, .dl-badge svg.si {
+  width: 11px !important;
+  height: 11px !important;
+  font-size: 11px !important;
+}
+
+/* no text-selection drag: long-press + slide on cards/chips/deadline text
+   made elements look swipeable (selection auto-scroll) */
+html, body {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+input, textarea {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
+/* touch: tag chips KEEP their hover feedback (round-4 — user asked for the
+   hover back, only the corner-X pop over the neighbouring chip was the bug).
+   chip-x stays pinned visible + tappable so it never pops in/out over a tap */
+@media (hover: none), (pointer: coarse) {
+  .chip-wrap .chip-x, .chip-wrap:hover .chip-x {
+    opacity: .65 !important;
+    pointer-events: auto !important;
+  }
+  .chip-x:hover { color: var(--danger) !important; }
+}

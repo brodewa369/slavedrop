@@ -6,3 +6,12 @@ dist/
 *.db
 *.db-shm
 *.db-wal
+
+# Android / mobile project
+mobile/android/.gradle/
+mobile/android/build/
+mobile/android/app/build/
+mobile/android/local.properties
+mobile/android/app/src/main/assets/www/
+mobile/android/captures/
+mobile/android/.idea/

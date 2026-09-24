@@ -1,0 +1,12 @@
+{
+  "name": "slavedrop-mobile-harness",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Mobile-UI debug harness for SlaveDrop (standalone, does not touch the desktop app)",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron . --remote-debugging-port=9333 --remote-allow-origins=* --no-sandbox"
+  },
+  "author": "brodewa",
+  "license": "MIT"
+}
