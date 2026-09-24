@@ -1,0 +1,33 @@
+[package]
+name = "slavedrop"
+version = "1.0.0"
+description = "Minimalist local airdrop farming tracker — your data never leaves your machine"
+authors = ["brodewa <brodewa@duit.cc>"]
+license = "MIT"
+edition = "2021"
+
+[lib]
+name = "slavedrop_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["protocol-asset"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rusqlite = { version = "0.37", features = ["bundled"] }
+arboard = "3"
+open = "5"
+tauri-plugin-dialog = "2.7.3"
+tokio = { version = "1.53.1", features = ["sync"] }
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true
+
+[patch.crates-io]
+tao = { path = "../vendor/tao" }

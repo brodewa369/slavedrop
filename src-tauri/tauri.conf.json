@@ -1,0 +1,50 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "SlaveDrop",
+  "version": "1.0.0",
+  "identifier": "com.brodewa.slavedrop",
+  "build": {
+    "frontendDist": "../ui"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "SlaveDrop",
+        "width": 1280,
+        "height": 840,
+        "minWidth": 960,
+        "minHeight": 640,
+        "backgroundColor": "#0d0f12",
+        "decorations": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: asset: http://asset.localhost https://asset.localhost; font-src 'self'; script-src 'self'",
+      "assetProtocol": {
+        "enable": true,
+        "scope": [
+          "$APPDATA/icons/**",
+          "$APPDATA/**",
+          "/home/dxwx/.config/slavedrop/icons/**",
+          "/home/dxwx/.local/share/com.brodewa.slavedrop/**",
+          "$HOME/.config/slavedrop/icons/**",
+          "$HOME/.local/share/com.brodewa.slavedrop/**"
+        ]
+      }
+    },
+    "withGlobalTauri": true
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "appimage",
+      "deb"
+    ],
+    "category": "Office",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/icon.png"
+    ]
+  }
+}
