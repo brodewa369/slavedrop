@@ -53,27 +53,27 @@ Prebuilt packages live on the [Releases page](../../releases).
 
 ### Linux — AppImage (any distro: Arch, Debian, Ubuntu, Fedora, openSUSE…)
 
-1. Download `SlaveDrop_2.0.0_amd64.AppImage` from [Releases](../../releases).
+1. Download `SlaveDrop_2.1.0_amd64.AppImage` from [Releases](../../releases).
 2. Make it executable and run it:
 
 ```bash
-chmod +x SlaveDrop_2.0.0_amd64.AppImage
-./SlaveDrop_2.0.0_amd64.AppImage
+chmod +x SlaveDrop_2.1.0_amd64.AppImage
+./SlaveDrop_2.1.0_amd64.AppImage
 ```
 
 The AppImage bundles the webview and its libraries, so it runs on virtually any modern glibc distro **without installing extra packages**. If your system has no FUSE (some minimal/container setups), run it with extraction mode instead:
 
 ```bash
-APPIMAGE_EXTRACT_AND_RUN=1 ./SlaveDrop_2.0.0_amd64.AppImage
+APPIMAGE_EXTRACT_AND_RUN=1 ./SlaveDrop_2.1.0_amd64.AppImage
 ```
 
 ### Debian / Ubuntu — .deb
 
 ```bash
-sudo apt install ./SlaveDrop_2.0.0_amd64.deb
+sudo apt install ./SlaveDrop_2.1.0_amd64.deb
 ```
 
-(or `sudo dpkg -i ./SlaveDrop_2.0.0_amd64.deb && sudo apt -f install`)
+(or `sudo dpkg -i ./SlaveDrop_2.1.0_amd64.deb && sudo apt -f install`)
 
 ### Arch / CachyOS / Manjaro
 
