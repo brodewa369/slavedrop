@@ -210,33 +210,32 @@
       </div><!-- /tb-right -->
     </header>
 
-    <!-- CALENDAR: full width -->
-    <div class="dashboard">
-      <div class="cal-strip" id="cal-strip">
-        <div class="cal-main">
-          <div class="cal-head">
-          <button class="btn btn-ghost btn-icon" id="cal-prev"><i class="ph ph-caret-left"></i></button>
-          <span class="cal-title" id="cal-title"></span>
-          <button class="btn btn-ghost btn-icon" id="cal-next"><i class="ph ph-caret-right"></i></button>
-          <span class="hd-right"><button class="btn btn-sm" id="cal-today">Today</button><span class="cal-clock" id="dl-clock"></span></span>
-        </div>
-        <div class="cal-grid-wrap" id="cal-grid-wrap">
-          <div class="cal" id="cal"></div>
-        </div>
-        <div class="cal-dl-detail" id="cal-dl-detail" hidden></div>
-        </div><!-- /.cal-main (left column) -->
-        <div class="cal-dl-summary" id="cal-dl-summary">
-          <div class="wk-head">
-            <h4 id="wk-title">Deadlines This Week</h4>
-            <button class="btn btn-ghost btn-icon" id="cal-toggle" title="Collapse calendar"></button>
-          </div>
-          <div class="wk-list" id="wk-list"></div>
-        </div>
-      </div>
-    </div>
-
     <!-- 3. PROJECT CARDS (grid; compact mode = single-line rows) -->
     <div class="view" id="view">
+    <!-- CALENDAR: full width -->
+        <div class="dashboard">
+          <div class="cal-strip" id="cal-strip">
+            <div class="cal-main">
+              <div class="cal-head">
+              <button class="btn btn-ghost btn-icon" id="cal-prev"><i class="ph ph-caret-left"></i></button>
+              <span class="cal-title" id="cal-title"></span>
+              <button class="btn btn-ghost btn-icon" id="cal-next"><i class="ph ph-caret-right"></i></button>
+              <span class="hd-right"><button class="btn btn-sm" id="cal-today">Today</button><span class="cal-clock" id="dl-clock"></span></span>
+            </div>
+            <div class="cal-grid-wrap" id="cal-grid-wrap">
+              <div class="cal" id="cal"></div>
+            </div>
+            <div class="cal-dl-detail" id="cal-dl-detail" hidden></div>
+            </div><!-- /.cal-main (left column) -->
+            <div class="cal-dl-summary" id="cal-dl-summary">
+              <div class="wk-head">
+                <h4 id="wk-title">Deadlines This Week</h4>
+                <button class="btn btn-ghost btn-icon" id="cal-toggle" title="Collapse calendar"></button>
+              </div>
+              <div class="wk-list" id="wk-list"></div>
+            </div>
+          </div>
+        </div>
       <div id="grid" class="grid"></div>
     </div>
   </div>

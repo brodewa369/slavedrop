@@ -392,8 +392,8 @@ function cardHtml(p) {
     <div class="card-ident">${identRows.join('')}</div>
     <div class="card-tasks">${taskRows}</div>
     <div class="card-foot">
-      <label class="cbx-daily" title="Mark this project as done today">
-        <input type="checkbox" class="cbx cbx-done" data-tid="0" ${p.done ? 'checked' : ''}>
+      <label class="cbx-daily" title="Check / uncheck all tasks">
+        <input type="checkbox" class="cbx cbx-done" data-tid="0" ${allTasksDone(p) ? 'checked' : ''}>
       </label>
       <span class="spacer"></span>
       <span class="task-count">${p.task_done}/${p.task_total} ${t('tasks')}</span>
@@ -416,12 +416,24 @@ function wireCards() {
       openDetail(id);
     });
 
-    // task toggles; the bare checkbox in card-foot toggles the project's done flag
+    // task toggles; the footer checkbox is the MASTER check-all: it flips every
+    // task in the card in sync, and the project's done flag follows the tasks.
+    // Reverse sync happens through render: the master checkbox is rendered from
+    // allTasksDone(p), so finishing/undoing one task updates it on re-render.
     $$('input.cbx', card).forEach(cb => cb.onchange = async (e) => {
+      const want = e.target.checked;
+      const tasks = p.tasks || [];
       if (cb.classList.contains('cbx-done')) {
-        await window.api.toggleProject(id, e.target.checked);
+        for (const tk of tasks) {
+          if (!!tk.done !== want) await window.api.toggleTask(id, tk.id, want);
+        }
+        if (!!p.done !== want) await window.api.toggleProject(id, want);
       } else {
-        await window.api.toggleTask(id, Number(cb.dataset.tid), e.target.checked);
+        const tk = tasks.find(x => x.id === Number(cb.dataset.tid));
+        if (tk) tk.done = want;
+        const allNow = tasks.length > 0 && tasks.every(x => !!x.done);
+        await window.api.toggleTask(id, Number(cb.dataset.tid), want);
+        if (allNow !== !!p.done) await window.api.toggleProject(id, allNow);
       }
       refresh();
     });
@@ -1685,6 +1697,10 @@ document.addEventListener('keydown', (e) => {
   if (h === '#wkscroll') { setTimeout(wkScrollTest, 900); return; }
   if (h === '#wkcollapse') { setTimeout(wkCollapseTest, 1400); return; }
   if (h === '#wkscrolldel') { setTimeout(wkScrollDelete, 800); return; }
+  if (h === '#widthqa') { setTimeout(widthQa, 700); return; }
+  if (h === '#headrowqa') { setTimeout(headRowQa, 700); return; }
+  if (h === '#checkallqa') { setTimeout(checkAllQa, 900); return; }
+  if (h === '#panelscrollqa') { setTimeout(panelScrollQa, 900); return; }
   if (h === '#cdweekly') {
     setTimeout(async () => {
       await cdDemo();
@@ -2004,6 +2020,120 @@ function wkScrollOverlay() {
     'toggle in wk-head: ' + (inHead ? 'YES' : 'NO'),
   ].join('\n'));
 }
+// QA: top panel + project grid must share identical left/right edges (width symmetry)
+function widthQa() {
+  try {
+    const R = (s) => { const n = document.querySelector(s); return n ? n.getBoundingClientRect() : null; };
+    const strip = R('.cal-strip'), grid = R('#grid'), card = R('#grid .card:last-child');
+    const refR = grid ? grid.right : (card ? card.right : NaN);
+    const refL = grid ? grid.left : (card ? card.left : NaN);
+    const dL = strip ? +(strip.left - refL).toFixed(1) : null;
+    const dR = strip ? +(strip.right - refR).toFixed(1) : null;
+    qaOverlay([
+      'WIDTH QA: top panel vs project grid edges',
+      'window.innerWidth    : ' + window.innerWidth,
+      'cal-strip  [l, r]    : [' + (strip ? strip.left.toFixed(1) : '-') + ', ' + (strip ? strip.right.toFixed(1) : '-') + ']',
+      '#grid      [l, r]    : [' + (grid ? grid.left.toFixed(1) : '-') + ', ' + (grid ? grid.right.toFixed(1) : '-') + ']',
+      'last card  [l, r]    : [' + (card ? card.left.toFixed(1) : '-') + ', ' + (card ? card.right.toFixed(1) : '-') + ']',
+      'left delta           : ' + dL + 'px',
+      'right delta          : ' + dR + 'px',
+      'RESULT               : ' + (strip && grid && Math.abs(dL) < 1 && Math.abs(dR) < 1 ? 'OK - edges identical' : 'FAIL - edges differ'),
+    ].join('\n'));
+  } catch (e) { qaOverlay('WIDTH QA ERROR: ' + e); }
+}
+
+// QA: calendar header must be ONE horizontal row (nav + pill + clock), DEADLINES same baseline
+function headRowQa() {
+  try {
+    const head = document.querySelector('.cal-head');
+    const prev = document.getElementById('cal-prev');
+    const hd = document.querySelector('.hd-right');
+    const wk = document.querySelector('.wk-head');
+    const clock = document.getElementById('dl-clock');
+    const pr = prev.getBoundingClientRect(), hr = hd.getBoundingClientRect();
+    const wr = wk ? wk.getBoundingClientRect() : null;
+    const wrap = getComputedStyle(head).flexWrap;
+    const sameLine = Math.abs(hr.top - pr.top) < 24;
+    const noOvf = head.scrollWidth <= head.clientWidth + 1;
+    const wkSame = wr ? Math.abs(wr.top - pr.top) < 8 : false;
+    qaOverlay([
+      'HEAD ROW QA: single horizontal header row',
+      'flex-wrap            : ' + wrap,
+      'month nav top        : ' + pr.top.toFixed(1),
+      'date pill+clock top  : ' + hr.top.toFixed(1) + '   (delta ' + (hr.top - pr.top).toFixed(1) + 'px)',
+      'DEADLINES top        : ' + (wr ? wr.top.toFixed(1) + '   (delta ' + (wr.top - pr.top).toFixed(1) + 'px)' : '-'),
+      'clock text           : ' + (clock ? clock.textContent : '-'),
+      'one line             : ' + (sameLine && wrap === 'nowrap' ? 'YES' : 'NO'),
+      'no overflow          : ' + (noOvf ? 'YES' : 'NO (scrollW ' + head.scrollWidth + ' > clientW ' + head.clientWidth + ')'),
+      'DEADLINES on row     : ' + (wkSame ? 'YES' : 'NO'),
+      'RESULT               : ' + (sameLine && wrap === 'nowrap' && noOvf && wkSame ? 'OK - one horizontal row' : 'FAIL'),
+    ].join('\n'));
+  } catch (e) { qaOverlay('HEAD ROW QA ERROR: ' + e); }
+}
+
+// QA: master check-all <-> individual tasks, BOTH directions
+async function checkAllQa() {
+  try {
+    const wait = (ms) => new Promise(r => setTimeout(r, ms));
+    const read = () => {
+      const c = document.querySelector('#grid .card');
+      if (!c) return null;
+      return {
+        master: !!c.querySelector('.cbx-done').checked,
+        tasks: Array.from(c.querySelectorAll('.card-tasks .cbx')).map(x => !!x.checked),
+        count: (c.querySelector('.task-count') || {}).textContent || '-',
+        bar: ((c.querySelector('.mini-bar i') || {}).style || {}).width || '-',
+      };
+    };
+    const S = (o) => o ? ('master=' + o.master + ' tasks=[' + o.tasks.join(',') + '] ' + o.count + ' bar=' + o.bar) : 'NO CARD';
+    const before = read();
+    if (!before) { qaOverlay('CHECKALL QA: no card'); return; }
+    const n = before.tasks.length;
+    document.querySelector('#grid .card .cbx-done').click();
+    await wait(1000);
+    const afterCheck = read();
+    document.querySelector('#grid .card .cbx-done').click();
+    await wait(1000);
+    const afterUncheck = read();
+    const okCheck = afterCheck && afterCheck.master && afterCheck.tasks.length === n && afterCheck.tasks.every(Boolean) && afterCheck.count.indexOf(n + '/' + n) === 0;
+    const okUncheck = afterUncheck && !afterUncheck.master && afterUncheck.tasks.every(x => !x) && afterUncheck.count.indexOf('0/' + n) === 0;
+    qaOverlay([
+      'CHECKALL QA (master <-> individual tasks)',
+      'before           : ' + S(before),
+      'after CHECK      : ' + S(afterCheck),
+      'after UNCHECK    : ' + S(afterUncheck),
+      'check direction  : ' + (okCheck ? 'OK' : 'FAIL'),
+      'uncheck direction: ' + (okUncheck ? 'OK' : 'FAIL'),
+      'RESULT           : ' + (okCheck && okUncheck ? 'OK - both directions synced' : 'FAIL'),
+    ].join('\n'));
+  } catch (e) { qaOverlay('CHECKALL QA ERROR: ' + e); }
+}
+// QA: panel is INSIDE .view now -> scrolling cards MUST carry it out of the viewport
+function panelScrollQa() {
+  try {
+    const view = document.querySelector('.view');
+    const strip = document.querySelector('.cal-strip');
+    const topbar = document.querySelector('.top-bar');
+    const vr0 = view.getBoundingClientRect(), s0 = strip.getBoundingClientRect();
+    view.scrollTop = view.scrollHeight;
+    const reached = view.scrollTop;
+    const s1 = strip.getBoundingClientRect();
+    const gone = s1.bottom <= vr0.top + 1;
+    const ds = +(s1.top - s0.top).toFixed(1);
+    view.scrollTop = 0;
+    const cs = getComputedStyle(strip);
+    qaOverlay([
+      'PANEL SCROLL QA v2: panel must scroll OUT of the viewport',
+      'view scrolled to   : ' + reached + 'px  (sh=' + view.scrollHeight + ', ch=' + view.clientHeight + ')',
+      'cal-strip top      : ' + s0.top.toFixed(1) + ' -> ' + s1.top.toFixed(1) + '   moved ' + ds + 'px',
+      'cal-strip bottom   : ' + s1.bottom.toFixed(1) + ' vs view top ' + vr0.top.toFixed(1),
+      'panel out of view  : ' + (gone ? 'YES' : 'NO'),
+      'strip position     : ' + cs.position + '  z=' + cs.zIndex,
+      'RESULT             : ' + (gone && ds < -100 ? 'OK - panel scrolls away with content (sticky reverted)' : 'FAIL - panel still pinned'),
+    ].join('\n'));
+  } catch (e) { qaOverlay('PANEL SCROLL QA ERROR: ' + e); }
+}
+
 // QA: click the relocated master toggle -> BOTH panels must hide in sync
 function wkCollapseTest() {
   const btn = document.getElementById('cal-toggle');
